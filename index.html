@@ -1,0 +1,2892 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <script>document.documentElement.classList.add('js');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site de Casamento — Levi & Nikki</title>
+  
+  <!-- Basecoat CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@1.0.2/dist/basecoat.cdn.min.css">
+  
+  <!-- Roboto para os textos corridos; títulos usam Georgia, como no iCasei -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800&display=swap">
+  
+  <!-- Fixed Shell CSS -->
+  <style>
+/* Skip artifact shell — fixed styles served beside every artifact.
+   Complements basecoat; artifacts override --accent for their own identity. */
+:root {
+  color-scheme: light dark;
+  --accent: #2563eb;
+  --accent-contrast: #ffffff;
+  --accent-text: color-mix(in srgb, var(--accent) 72%, #000);
+  --bg: #f8f9fb;
+  --surface: #ffffff;
+  --text: #14171f;
+  --text-muted: #5b6472;
+  --border: rgba(20, 23, 31, 0.10);
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(20, 23, 31, 0.08);
+  --space: 16px;
+}
+/* Theme resolution. Without data-theme the viewer's system preference decides,
+   as it always did. With it, the artifact's own choice wins in BOTH directions:
+   a page that hardcodes one palette must not be handed the opposite set of
+   tokens by the machine it happens to be opened on. The dark values appear
+   twice because a media query cannot be folded into a selector list.
+   The attribute sits inside :where() so these blocks keep the specificity of a
+   bare :root — the page's own <style> is linked after this file and must go on
+   overriding any token it wants, exactly as it could before. */
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
+    --bg: #101318;
+    --surface: #181c23;
+    --text: #eef1f6;
+    --text-muted: #9aa4b2;
+    --border: rgba(238, 241, 246, 0.12);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+}
+:root:where([data-theme="dark"]) {
+  color-scheme: dark;
+  --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
+  --bg: #101318;
+  --surface: #181c23;
+  --text: #eef1f6;
+  --text-muted: #9aa4b2;
+  --border: rgba(238, 241, 246, 0.12);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+:root:where([data-theme="light"]) { color-scheme: light; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+
+.shell-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.shell-section { padding: calc(var(--space) * 2) 0; }
+.shell-grid { display: grid; gap: var(--space); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.shell-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: var(--space); }
+.shell-footer { padding: 24px 0 40px; color: var(--text-muted); font-size: 13px; }
+
+.shell-hero { padding: calc(var(--space) * 3) 0 calc(var(--space) * 2); }
+.shell-hero h1 { font-size: clamp(26px, 4vw, 40px); line-height: 1.15; margin: 0 0 10px; text-wrap: balance; }
+.shell-hero p { color: var(--text-muted); max-width: 60ch; margin: 0; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space);
+}
+
+.kpi { display: flex; flex-direction: column; gap: 4px; }
+.kpi .kpi-value { font-size: 28px; font-weight: 650; line-height: 1.1; }
+.kpi .kpi-label { font-size: 13px; color: var(--text-muted); }
+.kpi .kpi-delta { font-size: 12.5px; font-weight: 600; }
+.kpi .kpi-delta.up { color: #0a8f3c; }
+.kpi .kpi-delta.down { color: #cf3131; }
+
+table.shell-table { border-collapse: collapse; width: 100%; font-size: 14px; }
+table.shell-table th {
+  text-align: left; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text-muted); font-weight: 600;
+}
+table.shell-table th, table.shell-table td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--border); }
+table.shell-table td.num, table.shell-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+
+.chart-box { width: 100%; min-height: 220px; }
+.chart-box svg { width: 100%; height: auto; display: block; }
+
+.muted { color: var(--text-muted); }
+.accent { color: var(--accent-text); }
+.shell-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-text);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .shell-fade { animation: shell-fade 400ms ease both; }
+  @keyframes shell-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+}
+
+</style>
+  
+
+  <style>
+    :root {
+      /* PALETA iCASEI: AZUL COMO COR PRIMÁRIA & DOMINANTE */
+      --color-blue: #7099BD;          /* Azul suave principal */
+      --color-blue-dark: #365B7D;     /* Azul escuro para títulos de destaque e hierarquia */
+      --color-blue-deep: #254461;     /* Azul profundo sóbrio e elegante */
+      --color-blue-light: #F0F5FA;    /* Azul claríssimo para fundos sutis de seção */
+      --color-blue-border: #BCD0E3;   /* Azul suave para bordas delicadas */
+
+      /* CORES DE ACENTO SECUNDÁRIAS (USADAS COM MODERAÇÃO) */
+      --color-yellow: #F4B400;        /* Amarelo girassol: florais decorativos e contagem regressiva */
+      --color-rose: #E7A6A3;          /* Rosa pálido: molduras polaroid e badges */
+      --color-green: #87A96B;         /* Verde folha: seção O Espaço */
+      --color-gray: #808080;          /* Cinza: textos secundários e linhas finas */
+      --color-cream: #FAF8F5;         /* Fundo neutro off-white para leveza */
+      
+      --accent: #7099BD;
+      --accent-text: #254F75;         /* Contraste acessível > 4.5:1 */
+      --accent-contrast: #FFFFFF;
+      --bg: #FAF8F5;
+      --surface: #FFFFFF;
+      --text: #26292D;
+      --text-muted: #6B7280;
+      --border: #DEE4EC;
+
+      --font-serif: Georgia, "Times New Roman", serif;
+      --font-sans: 'Roboto', Arial, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      color: var(--text);
+      background-color: var(--bg);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, .serif-font {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    /* Navbar fixa e suave */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(253, 251, 247, 0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(232, 223, 213, 0.8);
+      transition: all 0.3s ease;
+    }
+
+    .nav-container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-monogram {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      letter-spacing: 0.08em;
+    }
+
+    .nav-monogram span {
+      color: var(--color-blue);
+      font-size: 1.15rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.25rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .nav-links a {
+      color: #555E68;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+      padding: 0.25rem 0.2rem;
+      position: relative;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--color-blue-dark);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: var(--color-blue);
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-toggle-btn {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.4rem 0.6rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    @media (max-width: 860px) {
+      .nav-toggle-btn {
+        display: block;
+      }
+      .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #FAF7F2;
+        flex-direction: column;
+        padding: 1rem 1.5rem;
+        gap: 0.85rem;
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+        display: none;
+      }
+      .nav-links.open {
+        display: flex;
+      }
+    }
+
+    /* Divisor decorativo com girassol */
+    .sunflower-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin: 2rem auto;
+      max-width: 320px;
+      color: var(--color-gold);
+    }
+
+    .sunflower-divider::before,
+    .sunflower-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #DCCEC0, transparent);
+    }
+
+    .section-title {
+      font-size: 2.35rem;
+      text-align: center;
+      color: var(--color-blue-dark);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.01em;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--color-gray);
+      max-width: 620px;
+      margin: 0 auto 2.5rem;
+      font-size: 1.05rem;
+      font-weight: 300;
+    }
+
+    /* 1. HERO CAPA — ESTILO iCASEI SÓBRIO & ELEGANTE COM AZUL PROTAGONISTA */
+    .hero-wedding {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      padding: 7rem 1.5rem 4.5rem;
+      /* Fundo suave com leve degradê de azul suave para creme off-white */
+      background: linear-gradient(180deg, rgba(112, 153, 189, 0.12) 0%, rgba(240, 245, 250, 0.5) 45%, #FAF8F5 100%);
+      overflow: hidden;
+      border-bottom: 1px solid var(--color-blue-border);
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 620px;
+      height: 620px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(112, 153, 189, 0.18) 0%, rgba(112, 153, 189, 0.05) 50%, rgba(250, 248, 245, 0) 75%);
+      pointer-events: none;
+      filter: blur(55px);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* BRASÃO / MONOGRAMA L & N COM ARRANJO FLORAL ASSIMÉTRICO */
+    .monogram-seal-wrapper {
+      margin: 0 auto 1.25rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .monogram-svg {
+      width: 140px;
+      height: 120px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.05));
+      transition: transform 0.3s ease;
+    }
+
+    .monogram-svg:hover {
+      transform: scale(1.03);
+    }
+
+    .hero-tagline {
+      font-size: 0.95rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--color-blue-dark);
+      font-weight: 500;
+      margin-bottom: 0.85rem;
+      display: inline-block;
+      padding: 0.35rem 1.25rem;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 999px;
+      border: 1px solid var(--color-blue-border);
+      box-shadow: 0 2px 10px rgba(112, 153, 189, 0.1);
+    }
+
+    .hero-names {
+      font-size: clamp(3.2rem, 9vw, 6rem);
+      line-height: 1.05;
+      margin: 0.35rem 0 0.85rem;
+      color: var(--color-blue-deep);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-names .amp {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: var(--color-blue);
+      font-weight: 400;
+      margin: 0 0.18em;
+    }
+
+    .hero-date {
+      font-size: 1.35rem;
+      font-family: var(--font-serif);
+      letter-spacing: 0.12em;
+      color: var(--color-blue-dark);
+      background: #FFFFFF;
+      display: inline-block;
+      padding: 0.45rem 2rem;
+      border-radius: 999px;
+      border: 1.5px solid var(--color-blue);
+      box-shadow: 0 4px 14px rgba(112, 153, 189, 0.18);
+      margin-bottom: 2rem;
+      font-weight: 600;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 1.15rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.75rem;
+    }
+
+    /* FOTO ÂNCORA DE REFERÊNCIA DO ICASEI NO HERO (Levi_NIkki-32.jpg) */
+    .hero-anchor-container {
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-anchor-frame {
+      max-width: 380px;
+      width: 100%;
+      background: #FFFFFF;
+      padding: 12px 12px 28px 12px;
+      border: 1.5px solid var(--color-blue);
+      border-radius: 8px;
+      box-shadow: 0 16px 36px rgba(54, 91, 125, 0.16), 0 2px 8px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+
+    .hero-anchor-frame:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 42px rgba(54, 91, 125, 0.22);
+    }
+
+    .hero-anchor-img-wrap {
+      width: 100%;
+      aspect-ratio: 4 / 3.2;
+      overflow: hidden;
+      border-radius: 4px;
+      background: #F0F4F8;
+    }
+
+    .hero-anchor-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .hero-anchor-frame:hover .hero-anchor-img-wrap img {
+      transform: scale(1.04);
+    }
+
+    .hero-anchor-caption {
+      margin-top: 14px;
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      color: var(--color-blue-dark);
+      font-style: italic;
+      letter-spacing: 0.04em;
+    }
+
+    /* BOTÕES COM AZUL COMO COR PRIMÁRIA E DOMINANTE */
+    .btn-wedding {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--color-blue);
+      color: #FFFFFF;
+      padding: 0.85rem 2rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      border: 1.5px solid #5A83A6;
+      box-shadow: 0 8px 20px rgba(112, 153, 189, 0.28);
+      transition: all 0.25s ease;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .btn-wedding:hover,
+    .btn-wedding:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(112, 153, 189, 0.42);
+      background: var(--color-blue-dark);
+      color: #FFFFFF;
+    }
+
+    .btn-wedding-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #FFFFFF;
+      color: var(--color-blue-dark);
+      padding: 0.85rem 1.85rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      border: 1.5px solid var(--color-blue);
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 14px rgba(112, 153, 189, 0.12);
+    }
+
+    .btn-wedding-outline:hover,
+    .btn-wedding-outline:focus-visible {
+      border-color: var(--color-blue-dark);
+      background: var(--color-blue-light);
+      color: var(--color-blue-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-blue {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--color-blue);
+      color: #FFFFFF;
+      padding: 0.85rem 1.85rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      border: 1.5px solid #5A83A6;
+      box-shadow: 0 8px 20px rgba(112, 153, 189, 0.28);
+      transition: all 0.25s ease;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .btn-blue:hover,
+    .btn-blue:focus-visible {
+      background: var(--color-blue-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(54, 91, 125, 0.35);
+      color: #FFFFFF;
+    }
+
+    /* 2. CONTAGEM REGRESSIVA (AMARELO GIRASSOL PRESERVADO NO DESTAQUE DE CONTAGEM) */
+    .countdown-section {
+      padding: 4.5rem 1.5rem;
+      background: #FFFFFF;
+      border-top: 1px solid #ECE7E1;
+      border-bottom: 1px solid var(--color-blue-border);
+    }
+
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 600px) {
+      .countdown-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.85rem;
+      }
+    }
+
+    .countdown-card {
+      background: #FAF8F5;
+      border: 2px solid var(--color-yellow); /* Amarelo Girassol de acento na contagem */
+      border-radius: 16px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(244, 180, 0, 0.12);
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+    }
+
+    .countdown-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--color-blue);
+      box-shadow: 0 10px 22px rgba(112, 153, 189, 0.22);
+    }
+
+    .countdown-number {
+      font-family: var(--font-serif);
+      font-size: 3.1rem;
+      line-height: 1.05;
+      font-weight: 700;
+      color: #946900; /* Amarelo Girassol com contraste e legibilidade impecáveis */
+      display: block;
+    }
+
+    .countdown-label {
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--color-gray);
+      font-weight: 600;
+      margin-top: 0.4rem;
+      display: block;
+    }
+
+    /* 3. BOAS-VINDAS */
+    .welcome-section {
+      min-height: 680px;
+      padding: clamp(4rem, 7vw, 6rem) 1.5rem 0;
+      background: #A2B6D1;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+    }
+
+    .welcome-section .shell-container {
+      width: min(100%, 1140px);
+    }
+
+    .welcome-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
+      align-items: end;
+      gap: clamp(1rem, 4vw, 4rem);
+    }
+
+    .welcome-dialogue {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      align-self: center;
+      gap: clamp(2.75rem, 5vw, 4.5rem);
+      padding-bottom: clamp(4rem, 8vw, 7rem);
+    }
+
+    .welcome-bubble {
+      position: relative;
+      background: #FFFFFF;
+      color: #202A38;
+      border: 4px solid #202A38;
+      border-radius: 52% 48% 50% 46% / 48% 53% 47% 52%;
+      box-shadow: 6px 8px 0 rgba(52, 70, 95, 0.18);
+      text-align: center;
+    }
+
+    .welcome-bubble::before,
+    .welcome-bubble::after {
+      content: "";
+      position: absolute;
+      transform: rotate(13deg);
+    }
+
+    .welcome-bubble::before {
+      right: 54px;
+      bottom: -29px;
+      border-style: solid;
+      border-width: 42px 10px 0 34px;
+      border-color: #202A38 transparent transparent transparent;
+    }
+
+    .welcome-bubble::after {
+      right: 60px;
+      bottom: -20px;
+      border-style: solid;
+      border-width: 34px 7px 0 27px;
+      border-color: #FFFFFF transparent transparent transparent;
+    }
+
+    .welcome-bubble-title {
+      width: min(100%, 520px);
+      padding: clamp(1.7rem, 3vw, 2.4rem) clamp(2rem, 4vw, 3rem);
+      transform: rotate(-1.2deg);
+    }
+
+    .welcome-title {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      letter-spacing: 0.02em;
+      text-wrap: balance;
+    }
+
+    .welcome-bubble-message {
+      width: min(92%, 460px);
+      padding: clamp(1.35rem, 2.5vw, 1.9rem) clamp(1.8rem, 3.5vw, 2.6rem);
+      transform: rotate(1deg);
+    }
+
+    .welcome-bubble-message::before {
+      right: auto;
+      left: 54px;
+      transform: scaleX(-1) rotate(13deg);
+    }
+
+    .welcome-bubble-message::after {
+      right: auto;
+      left: 60px;
+      transform: scaleX(-1) rotate(13deg);
+    }
+
+    .welcome-message {
+      margin: 0;
+      color: inherit;
+      font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+      line-height: 1.65;
+      font-weight: 500 !important;
+    }
+
+    .welcome-couple {
+      width: min(100%, 590px);
+      max-height: 680px;
+      object-fit: contain;
+      object-position: center bottom;
+      align-self: end;
+      filter: drop-shadow(0 18px 24px rgba(52, 70, 95, 0.2));
+    }
+
+    @media (max-width: 768px) {
+      .welcome-section {
+        min-height: 0;
+        padding: 3.5rem 1rem 0;
+      }
+
+      .welcome-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .welcome-dialogue {
+        width: 100%;
+        gap: 3.25rem;
+        padding-bottom: 2.25rem;
+      }
+
+      .welcome-bubble-title {
+        width: min(94%, 430px);
+      }
+
+      .welcome-bubble-message {
+        width: min(90%, 390px);
+      }
+
+      .welcome-couple {
+        width: min(108%, 520px);
+        margin-inline: auto;
+      }
+    }
+
+    /* 4. NOSSA HISTÓRIA (TIMELINE) */
+    .timeline-section {
+      padding: 5rem 1.5rem;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .timeline {
+      position: relative;
+      margin: 3rem auto 2rem;
+      padding: 1rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      /* Gradiente estrutural com as 5 cores: Amarelo Girassol -> Azul Suave -> Rosa Pálido -> Verde Folha */
+      background: linear-gradient(180deg, #F4B400 0%, #7099BD 35%, #E7A6A3 70%, #87A96B 100%);
+      transform: translateX(-50%);
+    }
+
+    @media (max-width: 768px) {
+      .timeline::before {
+        left: 24px;
+      }
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 3.5rem;
+      position: relative;
+    }
+
+    .timeline-item:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+
+    @media (max-width: 768px) {
+      .timeline-item,
+      .timeline-item:nth-child(even) {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-left: 52px;
+      }
+    }
+
+    .timeline-node {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 4px solid var(--color-yellow); /* Amarelo Girassol #F4B400 */
+      box-shadow: 0 0 0 4px rgba(244, 180, 0, 0.3);
+      z-index: 3;
+    }
+
+    @media (max-width: 768px) {
+      .timeline-node {
+        left: 24px;
+        top: 8px;
+        transform: translateX(-50%);
+      }
+    }
+
+    .timeline-content {
+      width: 44%;
+      padding: 1.25rem 1.5rem;
+      background: #FFFFFF;
+      border: 1.5px solid var(--color-blue); /* Bordas de cards em Azul Suave #7099BD */
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(112, 153, 189, 0.08);
+    }
+
+    .timeline-media {
+      width: 44%;
+      display: flex;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      .timeline-content,
+      .timeline-media {
+        width: 100%;
+      }
+      .timeline-media {
+        margin-top: 1rem;
+        justify-content: flex-start;
+      }
+    }
+
+    .timeline-badge {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(231, 166, 163, 0.25); /* Rosa Pálido #E7A6A3 */
+      color: #7D3A37;
+      border: 1px solid var(--color-rose);
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-badge.badge-blue {
+      background: rgba(112, 153, 189, 0.18);
+      color: #2F4D66;
+      border-color: var(--color-blue);
+    }
+
+    .timeline-badge.badge-yellow {
+      background: rgba(244, 180, 0, 0.22);
+      color: #805B00;
+      border-color: var(--color-yellow);
+    }
+
+    .timeline-badge.badge-green {
+      background: rgba(135, 169, 107, 0.22);
+      color: #385524;
+      border-color: var(--color-green);
+    }
+
+    .timeline-text {
+      margin: 0;
+      color: #282421;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    /* Moldura Polaroid com destaque sutil Rosa Pálido #E7A6A3 */
+    .polaroid {
+      background: #FFFFFF;
+      padding: 10px 10px 28px 10px;
+      box-shadow: 0 10px 24px rgba(128, 128, 128, 0.12), 0 2px 6px rgba(0,0,0,0.04);
+      border: 1.5px solid var(--color-rose); /* Rosa pálido nas molduras polaroid */
+      border-radius: 4px;
+      display: inline-block;
+      transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+      position: relative;
+    }
+
+    .polaroid-img-wrapper {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      border-radius: 2px;
+      position: relative;
+      background: #FAF8F5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(128, 128, 128, 0.2);
+    }
+
+    .polaroid-img-real {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .polaroid:hover .polaroid-img-real {
+      transform: scale(1.05);
+    }
+
+    .polaroid-caption {
+      margin-top: 10px;
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: #4A423D;
+      text-align: center;
+      font-style: italic;
+    }
+
+    /* Rotações sutis para dar ar autêntico às fotos */
+    .rot-left-1 { transform: rotate(-2deg); }
+    .rot-right-1 { transform: rotate(2.2deg); }
+    .rot-left-2 { transform: rotate(-3deg); }
+    .rot-right-2 { transform: rotate(2.8deg); }
+    .rot-center { transform: rotate(0.8deg); }
+
+    .polaroid:hover {
+      transform: scale(1.04) rotate(0deg) !important;
+      border-color: var(--color-blue); /* Hover elegante conduzido pelo azul */
+      box-shadow: 0 18px 36px rgba(112, 153, 189, 0.25);
+      z-index: 10;
+    }
+
+    .timeline-polaroid {
+      max-width: 250px;
+      width: 100%;
+    }
+
+    .timeline-polaroid .polaroid-img-wrapper {
+      aspect-ratio: 1 / 1;
+    }
+
+    .timeline-media--collection {
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .timeline-media--collection .timeline-polaroid {
+      width: calc(50% - 0.375rem);
+      max-width: 180px;
+      padding: 7px 7px 20px;
+    }
+
+    .timeline-media--collection .polaroid-caption {
+      margin-top: 7px;
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 768px) {
+      .timeline-media--collection {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+      }
+
+      .timeline-media--collection .timeline-polaroid {
+        width: 100%;
+        max-width: none;
+      }
+
+      .timeline-media--collection .timeline-polaroid:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+        width: calc(50% - 0.375rem);
+        justify-self: center;
+      }
+    }
+
+    .timeline-note {
+      text-align: center;
+      font-style: italic;
+      color: #444E57;
+      max-width: 650px;
+      margin: 2.5rem auto 0;
+      font-size: 1.05rem;
+      padding: 1.1rem 1.5rem;
+      background: var(--color-blue-light); /* Fundo suave azul */
+      border-radius: 12px;
+      border-left: 4px solid var(--color-blue); /* Destaque azul condutor */
+      border-right: 1px solid var(--color-blue-border);
+    }
+
+    /* 5. GALERIA DE FOTOS (Fundo neutro com toque sutil azul iCasei) */
+    .gallery-section {
+      padding: 5rem 1.5rem;
+      background: linear-gradient(180deg, #FAF8F5 0%, var(--color-blue-light) 50%, #FAF8F5 100%);
+      border-top: 1px solid var(--color-blue-border);
+      border-bottom: 1px solid var(--color-blue-border);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .gallery-card {
+      display: flex;
+      justify-content: center;
+    }
+
+    .gallery-card .polaroid {
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .gallery-card .polaroid-img-wrapper {
+      aspect-ratio: 4 / 4.8;
+    }
+
+    /* 6. CONTRIBUIÇÃO / PRESENTES */
+    .gifts-section {
+      padding: 5rem 1.5rem;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .gifts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .gifts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .gift-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--color-blue); /* Bordas de cards em Azul Suave #7099BD */
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 8px 24px rgba(112, 153, 189, 0.08);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .gift-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--color-blue-dark);
+      box-shadow: 0 12px 28px rgba(112, 153, 189, 0.2);
+    }
+
+    .gift-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #EDF2F7;
+    }
+
+    .gift-flag {
+      font-size: 1.75rem;
+    }
+
+    .gift-title {
+      font-size: 1.4rem;
+      margin: 0;
+      color: var(--color-blue-dark);
+    }
+
+    .pix-box {
+      margin-top: auto;
+      background: #FAF8F5;
+      border: 1.5px solid var(--color-blue); /* Borda em Azul Suave */
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .pix-key {
+      font-family: monospace;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #2D2723;
+      letter-spacing: 0.04em;
+      word-break: break-all;
+    }
+
+    .btn-copy {
+      background: var(--color-blue); /* Botão em Azul Suave principal */
+      color: #FFFFFF;
+      border: 1px solid #5A83A6;
+      padding: 0.6rem 1.1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .btn-copy:hover {
+      background: var(--color-blue-dark);
+    }
+
+    .bank-info-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 1.25rem 0;
+    }
+
+    .bank-info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.55rem 0;
+      border-bottom: 1px dashed #EDE3D8;
+      font-size: 0.95rem;
+    }
+
+    .bank-info-label {
+      color: var(--text-muted);
+    }
+
+    .bank-info-val {
+      font-weight: 600;
+      color: #38302A;
+    }
+
+    .note-disclaimer {
+      font-size: 0.8rem;
+      color: #7B726B;
+      margin-top: auto;
+      font-style: italic;
+    }
+
+    /* 7. O GRANDE DIA */
+    .day-section {
+      padding: 5rem 1.5rem;
+      background: linear-gradient(135deg, #FFFBF5 0%, #F5ECDF 100%);
+      text-align: center;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .schedule-cards {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .schedule-card {
+      background: #FFFFFF;
+      border: 1px solid #E5DACB;
+      border-radius: 20px;
+      padding: 2.25rem 2.5rem;
+      min-width: 260px;
+      box-shadow: 0 8px 24px rgba(120, 95, 60, 0.06);
+      position: relative;
+    }
+
+    .schedule-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--color-blue-light);
+      color: var(--color-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+
+    .schedule-time {
+      font-family: var(--font-serif);
+      font-size: 2.35rem;
+      font-weight: 700;
+      color: var(--color-blue-dark);
+      margin-bottom: 0.35rem;
+    }
+
+    .schedule-label {
+      font-size: 1rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+    }
+
+    .schedule-card.featured {
+      border: 1.5px solid var(--color-blue);
+      box-shadow: 0 10px 28px rgba(112, 153, 189, 0.16);
+    }
+
+    .schedule-card.featured .schedule-icon {
+      background: var(--color-blue);
+      color: #FFFFFF;
+    }
+
+    /* 8. O ESPAÇO (Verde Folha #87A96B e Cinza Sólido #808080) */
+    .venue-section {
+      padding: 5rem 1.5rem;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .venue-card {
+      background: #FFFFFF;
+      border: 2px solid var(--color-green); /* Borda Verde Folha #87A96B */
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 12px 32px rgba(135, 169, 107, 0.12);
+    }
+
+    /* Imagem principal de destaque do iCasei no topo da seção O Espaço */
+    .venue-featured-banner {
+      background: linear-gradient(180deg, rgba(112, 153, 189, 0.12) 0%, rgba(240, 245, 250, 0.6) 100%);
+      padding: 2.25rem 1.5rem 1.75rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 1.5px solid var(--color-blue-border);
+    }
+
+    .venue-featured-frame {
+      max-width: 460px;
+      width: 100%;
+      background: #FFFFFF;
+      padding: 12px 12px 18px 12px;
+      border: 1.5px solid var(--color-blue); /* Moldura elegante com borda fina azul */
+      border-radius: 12px;
+      box-shadow: 0 10px 26px rgba(54, 91, 125, 0.14);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .venue-featured-frame:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 32px rgba(54, 91, 125, 0.2);
+    }
+
+    .venue-featured-img-wrap {
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #F4F7FA;
+    }
+
+    .venue-featured-img {
+      width: 100%;
+      max-height: 240px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .venue-featured-caption {
+      margin-top: 10px;
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      color: var(--color-blue-dark);
+      font-style: italic;
+    }
+
+    .venue-body {
+      padding: 3rem 2.5rem;
+    }
+
+    /* Layout responsivo com texto + polaroids das fotos do casal no verde */
+    .venue-content-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    .venue-title-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .venue-seal-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid var(--color-blue);
+      object-fit: cover;
+      padding: 3px;
+      background: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(112, 153, 189, 0.2);
+      flex-shrink: 0;
+    }
+
+    .venue-name {
+      font-size: 2.2rem;
+      margin: 0;
+      color: #26211E;
+    }
+
+    .venue-address {
+      color: #385524;
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin-top: 0.35rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .venue-address svg {
+      color: var(--color-green); /* Ícone Verde Folha #87A96B */
+      flex-shrink: 0;
+    }
+
+    .verse-quote {
+      margin: 1.75rem 0;
+      padding: 1.25rem 1.5rem;
+      background: rgba(135, 169, 107, 0.12); /* Fundo Verde Folha suave */
+      border-left: 4px solid var(--color-green); /* Borda Verde Folha #87A96B */
+      border-radius: 8px;
+      font-style: italic;
+      color: #2F2A26;
+      font-size: 1.02rem;
+    }
+
+    .verse-quote span {
+      display: block;
+      margin-top: 0.4rem;
+      font-style: normal;
+      font-size: 0.85rem;
+      color: #3D6126; /* Verde Folha estrutural */
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Composição polaroid ao lado do texto */
+    .venue-photos-composition {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .venue-polaroid {
+      width: 100%;
+      max-width: 270px;
+    }
+
+    .venue-polaroid .polaroid-img-wrapper {
+      aspect-ratio: 4 / 3.4;
+    }
+
+    @media (max-width: 820px) {
+      .venue-content-grid {
+        grid-template-columns: 1fr;
+        gap: 2.25rem;
+      }
+      .venue-photos-composition {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+      }
+      .venue-polaroid {
+        max-width: 240px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .venue-body {
+        padding: 2rem 1.25rem;
+      }
+      .venue-polaroid {
+        max-width: 100%;
+      }
+    }
+
+    .map-container {
+      width: 100%;
+      height: 380px;
+      border-top: 1px solid var(--border);
+      background: #EFEBE4;
+    }
+
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /* 9. ENCERRAMENTO (FOOTER) */
+    .wedding-footer {
+      padding: 5rem 1.5rem 3.5rem;
+      text-align: center;
+      background: #1B2B3A; /* Azul escuro sóbrio estilo iCasei */
+      color: #E2ECF5;
+      border-top: 3px solid var(--color-blue);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer-content {
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer-text {
+      font-family: var(--font-serif);
+      font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+      line-height: 1.6;
+      color: #F0F5FA;
+      margin-bottom: 1.75rem;
+    }
+
+    .footer-names {
+      font-family: var(--font-serif);
+      font-size: 2.8rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      margin-bottom: 1rem;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-flags {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-sub {
+      font-size: 0.85rem;
+      color: #9C9288;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 1.75rem;
+      margin-top: 2rem;
+    }
+
+    /* Alerta toast sutil */
+    .toast-feedback {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #2D2723;
+      color: #FFFFFF;
+      padding: 0.85rem 1.4rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: all 0.3s ease;
+      z-index: 9999;
+    }
+
+    .toast-feedback.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+  <!-- Paleta Levi & Nikki: mantém todas as seções e altera somente a identidade de cor -->
+  <style id="levi-nikki-blue-palette">
+    :root {
+      --color-blue: #A2B6D1;
+      --color-blue-dark: #5D7391;
+      --color-blue-deep: #34465F;
+      --color-blue-light: #A2B6D1;
+      --color-blue-border: rgba(255, 255, 255, 0.38);
+      --color-yellow: #A2B6D1;
+      --color-rose: #7D91AE;
+      --color-green: #5D7391;
+      --color-gray: #EAF0F7;
+      --color-cream: #A2B6D1;
+      --accent: #A2B6D1;
+      --accent-text: #34465F;
+      --accent-contrast: #FFFFFF;
+      --bg: #A2B6D1;
+      --surface: #FFFFFF;
+      --text: #FFFFFF;
+      --text-muted: #EAF0F7;
+      --border: rgba(255, 255, 255, 0.28);
+    }
+
+    html,
+    body {
+      background: #A2B6D1;
+      color: #FFFFFF;
+    }
+
+    .top-nav {
+      background: rgba(77, 97, 124, 0.94);
+      border-bottom-color: rgba(255, 255, 255, 0.22);
+    }
+
+    .nav-monogram,
+    .nav-monogram span,
+    .nav-links a {
+      color: #FFFFFF;
+    }
+
+    .nav-links a::after {
+      background: #FFFFFF;
+    }
+
+    .nav-toggle-btn {
+      color: #FFFFFF;
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+
+    .hero-wedding {
+      background: #A2B6D1;
+      border-bottom-color: rgba(255, 255, 255, 0.32);
+    }
+
+    .hero-glow {
+      background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 52%, transparent 75%);
+    }
+
+    .hero-tagline {
+      color: #FFFFFF;
+      background: rgba(93, 115, 145, 0.38);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .hero-names,
+    .hero-names .amp {
+      color: #FFFFFF;
+    }
+
+    .hero-date {
+      color: #5D7391;
+      border-color: #FFFFFF;
+      background: #FFFFFF;
+    }
+
+    .btn-wedding,
+    .btn-blue {
+      background: #FFFFFF;
+      color: #5D7391;
+      border-color: #FFFFFF;
+      box-shadow: 0 8px 22px rgba(52, 70, 95, 0.2);
+    }
+
+    .btn-wedding:hover,
+    .btn-wedding:focus-visible,
+    .btn-blue:hover,
+    .btn-blue:focus-visible {
+      background: #F7FAFD;
+      color: #34465F;
+    }
+
+    .btn-wedding-outline {
+      background: transparent;
+      color: #FFFFFF;
+      border-color: #FFFFFF;
+    }
+
+    .btn-wedding-outline:hover,
+    .btn-wedding-outline:focus-visible {
+      background: #FFFFFF;
+      color: #5D7391;
+    }
+
+    .section-title,
+    .section-subtitle {
+      color: #FFFFFF;
+    }
+
+    .sunflower-divider {
+      color: #FFFFFF;
+    }
+
+    .sunflower-divider::before,
+    .sunflower-divider::after {
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.72), transparent);
+    }
+
+    .sunflower-divider svg path {
+      stroke: #FFFFFF;
+    }
+
+    .sunflower-divider svg circle:first-child {
+      fill: #5D7391;
+    }
+
+    .countdown-section,
+    .gallery-section,
+    .day-section {
+      background: #A2B6D1;
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .timeline-section,
+    .gifts-section,
+    .venue-section {
+      background: #5D7391;
+      box-shadow: 0 0 0 100vmax #5D7391;
+      clip-path: inset(0 -100vmax);
+    }
+
+    .countdown-card,
+    .welcome-box,
+    .timeline-content,
+    .gift-card,
+    .schedule-card,
+    .venue-card,
+    .hero-anchor-frame,
+    .venue-featured-frame,
+    .polaroid {
+      background: #FFFFFF;
+      border-color: rgba(93, 115, 145, 0.48);
+      color: #34465F;
+    }
+
+    .countdown-number,
+    .countdown-label,
+    .welcome-text,
+    .timeline-text,
+    .polaroid-caption,
+    .gift-title,
+    .schedule-time,
+    .schedule-label,
+    .venue-name,
+    .venue-address,
+    .venue-featured-caption,
+    .pix-key,
+    .bank-info-val {
+      color: #34465F;
+    }
+
+    .countdown-card {
+      border-color: #FFFFFF;
+      box-shadow: 0 8px 22px rgba(52, 70, 95, 0.14);
+    }
+
+    .timeline::before {
+      background: linear-gradient(180deg, #A2B6D1 0%, #FFFFFF 50%, #A2B6D1 100%);
+    }
+
+    .timeline-node {
+      border-color: #A2B6D1 !important;
+      box-shadow: 0 0 0 4px rgba(162, 182, 209, 0.34) !important;
+    }
+
+    .timeline-content {
+      border-color: #A2B6D1 !important;
+    }
+
+    .timeline-badge,
+    .timeline-badge.badge-blue,
+    .timeline-badge.badge-yellow,
+    .timeline-badge.badge-green {
+      background: #EAF0F7;
+      color: #34465F;
+      border-color: #A2B6D1;
+    }
+
+    .timeline-note {
+      color: #FFFFFF;
+      background: rgba(52, 70, 95, 0.36);
+      border-color: rgba(255, 255, 255, 0.64);
+    }
+
+    .pix-box,
+    .schedule-icon,
+    .verse-quote,
+    .venue-featured-banner {
+      background: #EAF0F7;
+      border-color: #A2B6D1;
+      color: #34465F;
+    }
+
+    .verse-quote,
+    .verse-quote span,
+    .venue-address svg {
+      color: #34465F;
+    }
+
+    .venue-body p[style],
+    .gift-card p[style],
+    .gift-card span[style],
+    .schedule-card p[style] {
+      color: #52647B !important;
+    }
+
+    .day-section > .shell-container > p[style] {
+      color: #FFFFFF !important;
+    }
+
+    .wedding-footer {
+      background: #34465F;
+      border-top-color: #A2B6D1;
+    }
+
+    .footer-text,
+    .footer-names,
+    .footer-flags,
+    .footer-sub {
+      color: #FFFFFF;
+    }
+
+    .toast-feedback {
+      background: #34465F;
+      color: #FFFFFF;
+      border-color: #A2B6D1;
+    }
+
+    @media (max-width: 860px) {
+      .nav-links {
+        background: #4D617C;
+        border-bottom-color: rgba(255, 255, 255, 0.24);
+      }
+    }
+  </style>
+  <style id="icasei-typography-and-banner">
+    /* Regras tipográficas copiadas da aparência atual do iCasei */
+    body,
+    p,
+    li,
+    a,
+    button,
+    input,
+    textarea,
+    label {
+      font-family: var(--font-sans) !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .serif-font,
+    .section-title,
+    .countdown-title,
+    .hero-names,
+    .timeline-year,
+    .footer-names {
+      font-family: var(--font-serif) !important;
+      font-weight: 800 !important;
+    }
+
+    .section-title,
+    .countdown-title {
+      font-size: clamp(1.75rem, 3vw, 2.25rem) !important;
+      line-height: 1.35 !important;
+      letter-spacing: 0.045em !important;
+      text-transform: uppercase;
+    }
+
+    section p,
+    section li,
+    .footer-text {
+      font-size: clamp(1rem, 1.35vw, 1.125rem) !important;
+      line-height: 1.75 !important;
+      font-weight: 400 !important;
+    }
+
+    .icasei-hero-banner {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: #a2b6d1;
+    }
+
+    .icasei-hero-banner img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: none;
+      object-fit: contain;
+    }
+
+    .hero-wedding {
+      min-height: 0 !important;
+      padding: 0 !important;
+      display: block !important;
+    }
+
+    .hero-wedding .hero-content {
+      padding-top: clamp(3.5rem, 7vw, 6rem);
+      padding-bottom: clamp(3.5rem, 7vw, 6rem);
+    }
+
+    @media (max-width: 700px) {
+      .icasei-hero-banner img {
+        width: 100%;
+        height: auto;
+      }
+    }
+  </style>
+
+  <style id="wedding-experience-2026">
+    /* Conversa de boas-vindas: leve, integrada e com a tipografia do site */
+    .welcome-section { min-height: 610px; padding-top: clamp(3.5rem, 7vw, 5.5rem); }
+    .welcome-layout { grid-template-columns: minmax(300px, .9fr) minmax(390px, 1.1fr); gap: clamp(1rem, 4vw, 3.5rem); }
+    .welcome-dialogue { align-items: flex-start; gap: 1rem; padding-bottom: clamp(4rem, 8vw, 6rem); }
+    .welcome-bubble { border: 1px solid rgba(52,70,95,.18); border-radius: 24px; box-shadow: 0 14px 35px rgba(52,70,95,.12); text-align: left; transform: none; }
+    .welcome-bubble::before { border: 0; width: 20px; height: 20px; right: -9px; bottom: 24px; background: #fff; transform: rotate(45deg); border-top: 1px solid rgba(52,70,95,.18); border-right: 1px solid rgba(52,70,95,.18); }
+    .welcome-bubble::after { display: none; }
+    .welcome-bubble-title { width: min(100%, 520px); padding: 1.6rem 1.8rem; }
+    .welcome-bubble-message { width: min(90%, 440px); margin-left: clamp(0rem, 5vw, 3.5rem); padding: 1.15rem 1.4rem; }
+    .welcome-bubble-message::before { left: auto; right: -9px; transform: rotate(45deg); }
+    .welcome-title { font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; }
+    .welcome-message { font-family: var(--font-sans); font-size: clamp(1rem, 1.5vw, 1.125rem); line-height: 1.7; font-weight: 500 !important; }
+    .welcome-couple { width: min(100%, 570px); max-height: 590px; }
+
+    /* Faixa fotográfica da história. Parallax só onde o navegador o suporta bem. */
+    .story-parallax { width: 100vw; height: clamp(300px, 48vw, 520px); margin: 1.5rem 0 4rem calc(50% - 50vw); background: linear-gradient(rgba(20,31,45,.08),rgba(20,31,45,.28)), url('assets/maos-dadas.jpg') center 54% / cover fixed; position: relative; overflow: hidden; }
+    .story-parallax figcaption { position:absolute; left:50%; bottom:2rem; transform:translateX(-50%); width:min(90%,720px); color:#fff; text-align:center; font: italic 700 clamp(1.25rem,3vw,2rem)/1.3 var(--font-serif); text-shadow:0 2px 18px rgba(0,0,0,.55); }
+
+    /* Mosaico responsivo e lightbox */
+    .gallery-mosaic { display:grid; grid-template-columns:repeat(12,1fr); grid-auto-rows:110px; gap:12px; max-width:1120px; margin:0 auto; }
+    .gallery-item { appearance:none; border:0; padding:0; overflow:hidden; border-radius:14px; background:#dbe3ed; cursor:zoom-in; box-shadow:0 8px 22px rgba(52,70,95,.14); }
+    .gallery-item img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .65s cubic-bezier(.2,.7,.2,1), filter .3s ease; }
+    .gallery-item:hover img, .gallery-item:focus-visible img { transform:scale(1.045); filter:saturate(1.05); }
+    .gallery-item:focus-visible { outline:3px solid #fff; outline-offset:3px; }
+    .gallery-item--hero { grid-column:span 7; grid-row:span 4; }
+    .gallery-item--portrait { grid-column:span 5; grid-row:span 2; }
+    .gallery-item--wide { grid-column:span 4; grid-row:span 2; }
+    .gallery-item--small { grid-column:span 4; grid-row:span 2; }
+    .gallery-controls { display:none; }
+    .gallery-lightbox { width:min(92vw,1100px); max-width:none; border:0; padding:0; background:transparent; overflow:visible; }
+    .gallery-lightbox::backdrop { background:rgba(15,22,32,.88); backdrop-filter:blur(8px); }
+    .gallery-lightbox figure { margin:0; display:grid; place-items:center; }
+    .gallery-lightbox img { display:block; max-width:90vw; max-height:82vh; border-radius:12px; box-shadow:0 24px 80px rgba(0,0,0,.45); }
+    .gallery-lightbox figcaption { color:#fff; font-family:var(--font-sans); margin-top:.75rem; text-align:center; }
+    .lightbox-close,.lightbox-nav { position:fixed; z-index:2; border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.12); color:#fff; display:grid; place-items:center; cursor:pointer; backdrop-filter:blur(8px); }
+    .lightbox-close { top:1.25rem; right:1.25rem; width:46px; height:46px; border-radius:50%; font-size:2rem; }
+    .lightbox-nav { top:50%; width:48px; height:64px; border-radius:14px; font-size:2.5rem; transform:translateY(-50%); }
+    .lightbox-prev { left:1.25rem; } .lightbox-next { right:1.25rem; }
+
+    /* Cards mais compactos */
+    .gifts-section { max-width:820px; }
+    .gifts-grid { gap:1.25rem; margin-top:2rem; align-items:stretch; }
+    .gift-card { padding:1rem 1.1rem 1.15rem; min-height:560px; border-radius:16px; overflow:hidden; display:flex; flex-direction:column; }
+    .gift-card p, .gift-card li { font-size:.9rem !important; line-height:1.55 !important; }
+    .gift-title { font-size:1.25rem; line-height:1.25; }
+    .gift-character { width:100%; height:130px; object-fit:cover; object-position:50% 13%; margin:-.25rem 0 .55rem; border-radius:12px; background:#fff; }
+    .gift-header { margin-bottom:.75rem; }
+    .bank-info-list { display:grid; grid-template-columns:1fr 1fr; gap:.4rem .75rem; margin-bottom:.75rem; }
+    .bank-info-item { display:flex; flex-direction:column; align-items:flex-start; padding:.45rem .55rem; border:1px solid #e3eaf2; border-radius:9px; }
+    .pix-box { padding:.85rem; }
+    .bank-info-item { padding:.55rem 0; }
+    .schedule-cards { gap:1.15rem; margin-top:1.75rem; }
+    .schedule-card { padding:1.35rem 1.5rem; min-width:220px; max-width:300px; }
+    .schedule-icon { width:44px; height:44px; margin-bottom:.8rem; }
+    .schedule-time { font-size:2rem; }
+
+    /* Fotos reais do local e mapa com largura integral */
+    .venue-section { padding:5rem 0 0; max-width:none; }
+    .venue-inner { width:min(calc(100% - 3rem),1040px); margin:0 auto 4rem; }
+    .venue-gallery { display:grid; grid-template-columns:2fr 1fr 1fr; grid-template-rows:210px 210px; gap:10px; margin-top:2.5rem; border-radius:20px; overflow:hidden; box-shadow:0 18px 45px rgba(28,43,61,.26); }
+    .venue-gallery img { width:100%; height:100%; object-fit:cover; display:block; }
+    .venue-gallery-main { grid-row:span 2; }
+    .venue-copy { background:#fff; color:#34465F; border-radius:18px; padding:clamp(1.5rem,4vw,2.5rem); max-width:820px; margin:-3rem auto 0; position:relative; z-index:1; box-shadow:0 16px 38px rgba(28,43,61,.18); }
+    .venue-copy p { color:#52647B; }
+    .venue-copy .venue-address { color:#34465F; }
+    .venue-map { width:100%; height:clamp(270px,34vw,390px); position:relative; background:#d8e0ea; }
+    .venue-map iframe { width:100%; height:100%; border:0; display:block; }
+    .venue-map-link { position:absolute; left:50%; bottom:1rem; transform:translateX(-50%); border-radius:999px; background:#fff; color:#34465F; padding:.8rem 1.35rem; text-decoration:none; font-weight:700; box-shadow:0 8px 24px rgba(28,43,61,.22); }
+
+    /* Entrada suave; elementos continuam visíveis sem JavaScript. */
+    .js [data-reveal] { opacity:0; transform:translateY(28px); transition:opacity .75s ease, transform .75s cubic-bezier(.2,.7,.2,1); transition-delay:var(--reveal-delay,0ms); }
+    .js [data-reveal="left"] { transform:translateX(-28px); }
+    .js [data-reveal="right"] { transform:translateX(28px); }
+    .js [data-reveal].is-visible { opacity:1; transform:none; }
+    @media (prefers-reduced-motion:no-preference) { .welcome-couple { animation:welcomeFloat 6s ease-in-out infinite; } }
+    @keyframes welcomeFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+    @media (max-width:768px) {
+      .welcome-layout { grid-template-columns:1fr; }
+      .welcome-dialogue { gap:.8rem; padding-bottom:1.25rem; }
+      .welcome-bubble { width:min(92%,460px); }
+      .welcome-bubble::before { right:28px; bottom:-10px; transform:rotate(135deg); }
+      .welcome-bubble-message { margin-left:auto; margin-right:auto; }
+      .welcome-couple { width:min(100%,500px); }
+      .story-parallax { height:360px; background-attachment:scroll; background-position:center; margin-bottom:3rem; }
+      .gallery-controls { display:flex; align-items:center; justify-content:center; gap:1rem; margin-bottom:1rem; color:#fff; font-size:.85rem; }
+      .gallery-arrow { width:38px; height:38px; border:1px solid rgba(255,255,255,.6); border-radius:50%; background:rgba(255,255,255,.12); color:#fff; font-size:1.5rem; }
+      .gallery-mosaic { display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; padding:4px 9vw 18px; margin-inline:-1.5rem; }
+      .gallery-mosaic::-webkit-scrollbar { display:none; }
+      .gallery-item,.gallery-item--hero,.gallery-item--portrait,.gallery-item--wide,.gallery-item--small { flex:0 0 82vw; height:clamp(360px,110vw,510px); scroll-snap-align:center; border-radius:16px; }
+      .gifts-grid { grid-template-columns:1fr; max-width:430px; margin-inline:auto; }
+      .gift-character { height:130px; }
+      .schedule-cards { flex-direction:column; align-items:center; }
+      .schedule-card { width:min(100%,320px); }
+      .venue-inner { width:min(calc(100% - 2rem),1040px); }
+      .venue-gallery { grid-template-columns:1fr 1fr; grid-template-rows:240px 145px; }
+      .venue-gallery-main { grid-column:span 2; grid-row:auto; }
+      .venue-gallery img:last-child { display:none; }
+      .venue-copy { margin:-1.5rem .75rem 0; }
+      .venue-map { height:280px; }
+      .lightbox-nav { width:40px; height:54px; }
+      .lightbox-prev { left:.5rem; } .lightbox-next { right:.5rem; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      *,*::before,*::after { scroll-behavior:auto !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+      .js [data-reveal] { opacity:1; transform:none; }
+    }
+  </style>
+
+
+  <style id="layout-refinement-2026">
+    html, body { overflow-x:clip; }
+    /* Ritmo vertical uniforme para os cabeçalhos de seção */
+    .countdown-section, .gallery-section, .gifts-section, .day-section, .venue-section { padding-top:clamp(4rem,7vw,5rem); }
+    .section-title { margin:0 0 .75rem !important; }
+    .section-subtitle { margin:0 auto clamp(2rem,4vw,2.75rem) !important; }
+    .sunflower-divider { margin:0 auto 1.5rem; }
+
+    /* Boas-vindas fotográficas, sem balões e sem animação */
+    .welcome-section { min-height:clamp(440px,54vw,600px); padding:clamp(3rem,6vw,4.5rem) 1.5rem; align-items:center; justify-content:center; background-color:#34465F; background-image:linear-gradient(90deg,rgba(28,43,61,.72) 0%,rgba(28,43,61,.46) 38%,rgba(28,43,61,.08) 68%,rgba(28,43,61,.02) 100%),url('assets/boas-vindas-panorama.jpg'); background-position:center; background-size:cover; background-repeat:no-repeat; background-attachment:fixed; }
+    .welcome-content { width:min(38vw,500px); margin-right:auto; margin-left:max(1rem,calc((100vw - 1120px)/2)); position:relative; z-index:1; text-align:left; }
+    .welcome-title { margin:0 0 1rem; max-width:500px; color:#fff; font-family:var(--font-serif); font-size:clamp(1.8rem,3.4vw,3rem); font-weight:800; line-height:1.15; letter-spacing:.045em; text-transform:uppercase; text-align:left; text-wrap:balance; text-shadow:0 3px 20px rgba(0,0,0,.35); }
+    .welcome-title-line { display:block; white-space:nowrap; }
+    .welcome-message { max-width:470px; margin:0; color:#fff; font-family:var(--font-sans); font-size:clamp(1rem,1.35vw,1.1rem) !important; font-weight:500 !important; line-height:1.75 !important; text-align:left; text-shadow:0 2px 12px rgba(0,0,0,.45); }
+    .welcome-couple { animation:none !important; }
+
+    /* A foto acompanha toda a linha do tempo; o azul anterior sai da seção */
+    .timeline-section { max-width:none; padding:clamp(4rem,7vw,5rem) 1.5rem; margin:0; background:linear-gradient(rgba(28,43,61,.64),rgba(28,43,61,.72)),url('assets/maos-dadas.jpg') center / cover fixed; box-shadow:none; clip-path:none; }
+    .timeline-section > .sunflower-divider, .timeline-section > .section-title, .timeline-section > .section-subtitle, .timeline-section > .timeline, .timeline-section > .timeline-note { width:min(100%,1040px); margin-left:auto; margin-right:auto; }
+    .timeline-section > .section-title { margin:0 auto .75rem !important; text-align:center !important; }
+    .timeline-section > .section-subtitle { margin:0 auto 2.5rem !important; text-align:center !important; }
+    .timeline { margin-top:0; }
+    .timeline-note { box-sizing:border-box; }
+    .story-parallax { display:none; }
+
+    /* Mosaico e fotos do espaço ocupam toda a largura disponível */
+    .gallery-section { padding-left:0; padding-right:0; }
+    .gallery-section > .shell-container { max-width:none; width:100%; padding-inline:0; }
+    .gallery-section .section-title, .gallery-section .section-subtitle { padding-inline:1.5rem; }
+    .gallery-controls { display:flex; align-items:center; justify-content:center; gap:1rem; margin-bottom:1rem; color:#fff; font-size:.85rem; }
+    .gallery-arrow { width:38px; height:38px; border:1px solid rgba(255,255,255,.6); border-radius:50%; background:rgba(255,255,255,.12); color:#fff; font-size:1.5rem; cursor:pointer; }
+    .gallery-mosaic { width:100%; max-width:none; display:grid; grid-template-columns:none; grid-template-rows:repeat(2,220px); grid-auto-columns:clamp(340px,32vw,460px); grid-auto-flow:column; gap:8px; overflow-x:auto; scroll-snap-type:x proximity; scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.65) rgba(255,255,255,.12); padding-bottom:12px; }
+    .gallery-item,.gallery-item--portrait,.gallery-item--wide,.gallery-item--small { grid-column:auto; grid-row:auto; border-radius:0; box-shadow:none; scroll-snap-align:start; }
+    .gallery-item--hero { grid-column:auto; grid-row:span 2; }
+    .venue-inner { width:100%; margin-bottom:3rem; }
+    .venue-inner > .sunflower-divider, .venue-inner > .section-title, .venue-inner > .section-subtitle, .venue-copy { width:min(calc(100% - 3rem),900px); }
+    .venue-gallery { width:100%; margin:2.5rem 0 0; border-radius:0; box-shadow:none; }
+    .venue-gallery { grid-template-columns:1.15fr 1fr 1fr 1fr; grid-template-rows:250px 250px; gap:8px; }
+    .venue-gallery-main { grid-column:auto; grid-row:span 2; }
+    .venue-gallery-wide { grid-column:span 2; }
+    .venue-gallery img { min-width:0; }
+    .venue-copy { box-sizing:border-box; margin:clamp(2rem,5vw,3.5rem) auto 0; padding:0; background:transparent; color:#fff; border-radius:0; box-shadow:none; }
+    .venue-copy .venue-name, .venue-copy .venue-address, .venue-copy p { color:#fff !important; }
+    .venue-copy .venue-name { text-align:center; }
+    .venue-copy .venue-address { justify-content:center; text-align:center; }
+    .venue-copy .verse-quote { color:#34465F; background:#fff; border-left-color:#A2B6D1; }
+
+    /* Personagens ficam ao lado dos cards, como parte da composição */
+    .gifts-section { max-width:1180px; padding-bottom:0; overflow:hidden; }
+    .gifts-section > .section-title, .gifts-section > .section-subtitle { text-align:center; margin-left:auto !important; margin-right:auto !important; }
+    .gifts-grid { grid-template-columns:1fr 1fr; gap:2rem; max-width:960px; margin-inline:auto; align-items:end; }
+    .gift-person { position:relative; min-height:455px; display:flex; align-items:flex-end; box-sizing:border-box; }
+    .gift-card { width:clamp(280px,29vw,350px); min-height:420px; box-sizing:border-box; position:relative; z-index:2; overflow:visible; }
+    .gift-person--levi { justify-content:flex-end; padding-left:150px; }
+    .gift-person--nikki { justify-content:flex-start; padding-right:150px; }
+    .gift-character { position:absolute; z-index:1; width:235px; height:auto; max-height:430px; object-fit:contain; margin:0; border-radius:0; background:transparent; pointer-events:none; }
+    .gift-character--levi { left:-20px; bottom:0; }
+    .gift-character--nikki { right:-18px; bottom:0; }
+    .venue-inner > .sunflower-divider, .venue-inner > .section-title, .venue-inner > .section-subtitle { margin-left:auto !important; margin-right:auto !important; text-align:center !important; }
+
+    .footer-logo { display:block; width:min(210px,52vw); height:auto; margin:1rem auto 1.25rem; }
+
+    /* Logo no menu e fundo adaptativo durante a rolagem */
+    .top-nav { background:transparent !important; border-bottom-color:transparent; box-shadow:none; }
+    .top-nav.is-scrolled { background:rgba(52,70,95,.9) !important; border-bottom-color:rgba(255,255,255,.22); box-shadow:0 8px 26px rgba(28,43,61,.16); }
+    .nav-monogram { width:64px; height:46px; padding:0; flex:0 0 auto; }
+    .nav-logo { display:block; width:100%; height:100%; object-fit:contain; }
+    .nav-toggle-btn line { transition:transform .2s ease, opacity .2s ease; transform-box:fill-box; transform-origin:center; }
+    .nav-toggle-btn[aria-expanded="true"] line:nth-child(1) { transform:translateY(6px) rotate(45deg); }
+    .nav-toggle-btn[aria-expanded="true"] line:nth-child(2) { opacity:0; }
+    .nav-toggle-btn[aria-expanded="true"] line:nth-child(3) { transform:translateY(-6px) rotate(-45deg); }
+
+    /* Hospedagem: reserva o espaço sem anunciar opções ainda não verificadas */
+    .stay-section { padding:clamp(4rem,7vw,5rem) 1.5rem; background:#A2B6D1; color:#fff; text-align:center; }
+    .stay-inner { width:min(100%,900px); margin:0 auto; }
+    .stay-panel { margin:2.25rem auto 0; padding:clamp(2rem,5vw,3.25rem); border-top:1px solid rgba(255,255,255,.52); border-bottom:1px solid rgba(255,255,255,.52); }
+    .stay-kicker { display:inline-block; margin-bottom:1rem; padding:.38rem .9rem; border:1px solid rgba(255,255,255,.56); border-radius:999px; font:700 .76rem/1 var(--font-sans); letter-spacing:.14em; text-transform:uppercase; }
+    .stay-panel h3 { margin:0 0 .85rem; color:#fff; font-size:clamp(1.45rem,3vw,2rem); }
+    .stay-panel p { max-width:650px; margin:0 auto; font:500 clamp(1rem,1.35vw,1.1rem)/1.75 var(--font-sans); color:#fff; }
+
+    @media (max-width:850px) {
+      .nav-container > nav { position:absolute; top:100%; left:0; right:0; }
+      .nav-container > nav .nav-links { position:static; width:100%; box-sizing:border-box; }
+      .welcome-section { min-height:540px; background-position:70% center; background-size:cover; background-attachment:scroll; align-items:flex-end; }
+      .welcome-section::before { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(28,43,61,.08) 20%,rgba(28,43,61,.82) 88%); }
+      .welcome-content { width:min(100%,520px); margin:0 auto; text-align:left; }
+      .welcome-title { font-size:clamp(1.65rem,7.4vw,2.15rem); }
+      .welcome-message { margin:0; }
+      .timeline-section { background-attachment:scroll; }
+      .gifts-grid { grid-template-columns:1fr; max-width:560px; gap:3rem; }
+      .gift-person { min-height:455px; }
+      .gift-person--levi { justify-content:flex-end; padding-left:120px; }
+      .gift-person--nikki { justify-content:flex-start; padding-right:120px; }
+      .gift-card { width:min(100%,350px); min-height:420px; }
+      .gift-character { width:210px; }
+      .gallery-section .gallery-mosaic { display:flex; grid-template-rows:none; grid-auto-columns:auto; grid-auto-flow:row; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; padding:4px 7vw 18px; }
+      .gallery-item,.gallery-item--hero,.gallery-item--portrait,.gallery-item--wide,.gallery-item--small { flex:0 0 82vw; height:clamp(360px,110vw,510px); grid-column:auto; grid-row:auto; scroll-snap-align:center; border-radius:14px; }
+      .venue-inner > .sunflower-divider, .venue-inner > .section-title, .venue-inner > .section-subtitle, .venue-copy { width:min(calc(100% - 2rem),900px); }
+      .venue-gallery { grid-template-columns:1fr 1fr; grid-template-rows:240px 180px 160px 160px; }
+      .venue-gallery-main, .venue-gallery-wide { grid-column:span 2; grid-row:auto; }
+      .venue-gallery img:last-child { display:block; }
+    }
+    @media (max-width:560px) {
+      .welcome-section { min-height:510px; padding:3rem 1.25rem 2.5rem; align-items:flex-end; background-position:96% center; }
+      .welcome-content { margin:0; }
+      .welcome-title { font-size:clamp(1.5rem,6.6vw,1.8rem); }
+      .gifts-section { padding-left:.75rem; padding-right:.75rem; padding-bottom:1.75rem; }
+      .gifts-grid { gap:2.25rem; }
+      .gift-person { min-height:0; padding:0; align-items:flex-end; overflow:visible; }
+      .gift-person--levi { justify-content:flex-end; z-index:1; }
+      .gift-person--nikki { justify-content:flex-start; z-index:2; }
+      .gift-card { width:294px; min-height:0; padding:.85rem .9rem .9rem; }
+      .gift-card p, .gift-card li { font-size:.84rem !important; line-height:1.45 !important; }
+      .gift-card > p { margin-bottom:.75rem !important; }
+      .gift-card .gift-header { margin-bottom:.85rem; padding-bottom:.75rem; }
+      .gift-card .gift-title { font-size:1.08rem; line-height:1.12; }
+      .gift-card .pix-box { margin-top:auto; padding:.75rem; }
+      .gift-card .pix-key { font-size:.88rem; letter-spacing:.03em; white-space:nowrap; }
+      .gift-card .bank-info-list { gap:.55rem; }
+      .gift-card .bank-info-item { padding:.65rem .7rem; }
+      .gift-card .note-disclaimer { margin-top:.65rem; font-size:.78rem; line-height:1.4; }
+      .gift-character { width:138px; height:205px; max-height:none; bottom:0; object-fit:cover; object-position:50% top; }
+      .gift-character--levi { left:-5px; bottom:-4.25rem; }
+      .gift-character--nikki { right:-5px; bottom:-1.75rem; }
+      .venue-gallery { grid-template-rows:220px 170px 150px 150px; }
+    }
+  </style>
+
+</head>
+<body>
+
+  <!-- Navegação Fixa -->
+  <header class="top-nav" aria-label="Navegação Principal">
+    <div class="nav-container">
+      <a href="#inicio" class="nav-monogram" aria-label="Levi e Nikki">
+        <img class="nav-logo" src="assets/logo-ln-transparent.svg" alt="" aria-hidden="true">
+      </a>
+      <button class="nav-toggle-btn" id="navToggle" aria-label="Abrir Menu de Navegação" aria-expanded="false" aria-controls="navMenu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <nav>
+        <ul class="nav-links" id="navMenu">
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#contagem">Contagem</a></li>
+          <li><a href="#historia">História</a></li>
+          <li><a href="#galeria">Galeria</a></li>
+          <li><a href="#presentes">Contribuições</a></li>
+          <li><a href="#ograndedia">O Grande Dia</a></li>
+          <li><a href="#espaco">O Espaço</a></li>
+          <li><a href="#hospedagem">Hospedagem</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- 1. CAPA (HERO) -->
+  <section id="inicio" class="hero-wedding">
+    <figure class="icasei-hero-banner">
+      <img src="assets/banner-principal.png" alt="Levi e Nikki — São Paulo, Brasil" loading="eager" fetchpriority="high">
+    </figure>
+
+  </section>
+
+  <!-- 2. BOAS-VINDAS -->
+  <section class="welcome-section" aria-label="Boas-vindas de Levi e Nikki">
+    <div class="welcome-content">
+      <h2 class="welcome-title"><span class="welcome-title-line">Sejam bem-vindos</span><span class="welcome-title-line">ao nosso site!</span></h2>
+      <p class="welcome-message">A melhor forma de compartilhar esse momento com vocês é vivendo juntos esse sonho!</p>
+    </div>
+  </section>
+
+  <!-- 3. CONTAGEM REGRESSIVA -->
+  <section id="contagem" class="countdown-section">
+    <div class="shell-container">
+      <div class="sunflower-divider">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#F4B400" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" fill="#603813"/>
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1l2.1-2.1M17 7l2.1-2.1" stroke="#F4B400" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h2 class="section-title">Contagem Regressiva</h2>
+      <p class="section-subtitle">Cada segundo nos aproxima do momento mais esperado de nossas vidas</p>
+
+      <div class="countdown-grid" id="weddingCountdown" role="timer" aria-live="polite">
+        <div class="countdown-card">
+          <span class="countdown-number" id="countDays">00</span>
+          <span class="countdown-label">Dias</span>
+        </div>
+        <div class="countdown-card">
+          <span class="countdown-number" id="countHours">00</span>
+          <span class="countdown-label">Horas</span>
+        </div>
+        <div class="countdown-card">
+          <span class="countdown-number" id="countMinutes">00</span>
+          <span class="countdown-label">Minutos</span>
+        </div>
+        <div class="countdown-card">
+          <span class="countdown-number" id="countSeconds">00</span>
+          <span class="countdown-label">Segundos</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. NOSSA HISTÓRIA (Fotos Reais 26, 32, 33, 38, 42) -->
+  <section id="historia" class="timeline-section">
+    <div class="sunflower-divider">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="#F4B400" aria-hidden="true">
+        <circle cx="12" cy="12" r="4" fill="#5A3E26"/>
+        <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1l2.1-2.1M17 7l2.1-2.1" stroke="#F4B400" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h2 class="section-title">Nossa História</h2>
+    <p class="section-subtitle">Os passos que o amor traçou através dos oceanos até nos unir para sempre</p>
+
+    <div class="timeline">
+      <!-- Marco 1: 2023 - a história começa com os pais de Nikki no Brasil -->
+      <div class="timeline-item">
+        <div class="timeline-node"></div>
+        <div class="timeline-content">
+          <span class="timeline-badge">2023</span>
+          <p class="timeline-text">Levi recebe os pais de Nikki em sua casa no Brasil.</p>
+        </div>
+        <div class="timeline-media">
+          <div class="polaroid timeline-polaroid rot-left-1">
+            <div class="polaroid-img-wrapper">
+              <img src="assets/timeline-parents-spfc.jpeg" alt="Levi com os pais de Nikki torcendo pelo São Paulo" class="polaroid-img-real" loading="lazy">
+            </div>
+            <div class="polaroid-caption">O começo de tudo</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Marco 2: 2024 - primeira viagem à Ilha de Man -->
+      <div class="timeline-item">
+        <div class="timeline-node" style="border-color: var(--color-blue); box-shadow: 0 0 0 4px rgba(112, 153, 189, 0.3);"></div>
+        <div class="timeline-content" style="border-color: var(--color-blue);">
+          <span class="timeline-badge badge-blue">2024 · Ilha de Man</span>
+          <p class="timeline-text">Levi viaja para a Ilha de Man e conhece Nikki durante a conferência.</p>
+        </div>
+        <div class="timeline-media">
+          <div class="polaroid timeline-polaroid rot-right-1">
+            <div class="polaroid-img-wrapper">
+              <img src="assets/timeline-item-02.jpg" alt="Levi e Nikki com amigos durante a conferência na Ilha de Man" class="polaroid-img-real" loading="lazy">
+            </div>
+            <div class="polaroid-caption">Nosso primeiro encontro</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Marco 3: Julho de 2025 - sem foto atribuída -->
+      <div class="timeline-item">
+        <div class="timeline-node"></div>
+        <div class="timeline-content">
+          <span class="timeline-badge badge-yellow">Julho de 2025</span>
+          <p class="timeline-text">Em um novo encontro na Ilha de Man, dez dias juntos aproximam os dois e revelam que havia algo a mais entre eles.</p>
+        </div>
+        <div class="timeline-media timeline-media--collection">
+          <div class="polaroid timeline-polaroid rot-left-2">
+            <div class="polaroid-img-wrapper">
+              <img src="assets/timeline-item-03-a.jpg" alt="Levi e Nikki reunidos com amigos durante a conferência" class="polaroid-img-real" loading="lazy">
+            </div>
+            <div class="polaroid-caption">De volta à conferência</div>
+          </div>
+          <div class="polaroid timeline-polaroid rot-right-1">
+            <div class="polaroid-img-wrapper">
+              <img src="assets/timeline-item-03-b.jpg" alt="Levi e Nikki sentados juntos à beira-mar" class="polaroid-img-real" loading="lazy">
+            </div>
+            <div class="polaroid-caption">Algo a mais no ar</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Marco 4: Dezembro de 2025 - sem foto atribuída -->
+      <div class="timeline-item">
+        <div class="timeline-node" style="border-color: var(--color-rose); box-shadow: 0 0 0 4px rgba(231, 166, 163, 0.35);"></div>
+        <div class="timeline-content" style="border-color: var(--color-rose);">
+          <span class="timeline-badge">Dezembro de 2025</span>
+          <p class="timeline-text">Após despedida no aeroporto e conversas à distância, Levi volta à Ilha de Man; um mês juntos confirma o sentimento e vem o pedido de namoro.</p>
+        </div>
+        <div class="timeline-media timeline-media--collection">
+          <div class="polaroid timeline-polaroid rot-right-2">
+            <div class="polaroid-img-wrapper">
+              <img src="assets/timeline-item-04-a.jpg" alt="Levi e Nikki juntos em uma fotografia instantânea" class="polaroid-img-real" loading="lazy">
+            </div>
+            <div class="polaroid-caption">Certeza no coração</div>
+          </div>
+          <div class="polaroid timeline-polaroid rot-left-1">
+            <div class="polaroid-img-wrapper">
+              <img src="assets/timeline-item-04-b.jpg" alt="Levi e Nikki juntos durante o Natal" class="polaroid-img-real" loading="lazy">
+            </div>
+            <div class="polaroid-caption">Nosso dezembro</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Marco 5: Agosto de 2026 - pedido de casamento -->
+      <div class="timeline-item">
+        <div class="timeline-node"></div>
+        <div class="timeline-content">
+          <span class="timeline-badge badge-yellow">Agosto de 2026</span>
+          <p class="timeline-text">Nikki vem ao Brasil e Levi faz o pedido de casamento.</p>
+        </div>
+        <div class="timeline-media timeline-media--collection">
+          <div class="polaroid timeline-polaroid rot-left-1">
+            <div class="polaroid-img-wrapper">
+              <img src="assets/timeline-engagement.jpg" alt="Levi e Nikki celebrando o pedido de casamento" class="polaroid-img-real" loading="lazy">
+            </div>
+            <div class="polaroid-caption">O grande pedido</div>
+          </div>
+          <div class="polaroid timeline-polaroid rot-right-1">
+            <div class="polaroid-img-wrapper">
+              <img src="assets/timeline-boat.jpg" alt="Levi e Nikki juntos em um passeio de barco" class="polaroid-img-real" loading="lazy">
+            </div>
+            <div class="polaroid-caption">Noivos!</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="timeline-note">
+      "Criamos este site para reunir todas as informações importantes sobre o nosso dia, especialmente para quem estará viajando de longe."
+    </div>
+  </section>
+
+  <!-- 5. GALERIA DE FOTOS -->
+  <section id="galeria" class="gallery-section">
+    <div class="shell-container">
+      <div class="sunflower-divider" aria-hidden="true"></div>
+      <h2 class="section-title">Galeria de Lembranças</h2>
+      <p class="section-subtitle">Memórias ao lado das pessoas queridas que fazem parte da nossa história</p>
+
+      <div class="gallery-controls" aria-label="Navegação da galeria">
+        <button type="button" class="gallery-arrow" id="galleryPrev" aria-label="Foto anterior">‹</button>
+        <span>Deslize para ver mais</span>
+        <button type="button" class="gallery-arrow" id="galleryNext" aria-label="Próxima foto">›</button>
+      </div>
+
+      <div class="gallery-mosaic" id="galleryTrack">
+        <button type="button" class="gallery-item gallery-item--hero" data-gallery-index="0" aria-label="Ampliar: encontro com pessoas queridas">
+          <img src="assets/photo-01.jpg" alt="Levi e Nikki reunidos com familiares e amigos" loading="lazy">
+        </button>
+        <button type="button" class="gallery-item gallery-item--portrait" data-gallery-index="1" aria-label="Ampliar: passeio entre amigos">
+          <img src="assets/photo-02.jpg" alt="Nikki em um passeio com amigos" loading="lazy">
+        </button>
+        <button type="button" class="gallery-item gallery-item--portrait" data-gallery-index="2" aria-label="Ampliar: dia especial em grupo">
+          <img src="assets/photo-03.jpg" alt="Levi e Nikki celebrando com um grupo de amigos" loading="lazy">
+        </button>
+        <button type="button" class="gallery-item gallery-item--wide" data-gallery-index="3" aria-label="Ampliar: lembrança com amigos">
+          <img src="assets/photo-04.jpg" alt="Nikki reunida com amigos em um dia de celebração" loading="lazy">
+        </button>
+        <button type="button" class="gallery-item gallery-item--wide" data-gallery-index="4" aria-label="Ampliar: viagem em boa companhia">
+          <img src="assets/photo-05.jpg" alt="Levi e Nikki viajando com pessoas queridas" loading="lazy">
+        </button>
+        <button type="button" class="gallery-item gallery-item--small" data-gallery-index="5" aria-label="Ampliar: passeio na costa com amigos">
+          <img src="assets/photo-06.jpg" alt="Levi e Nikki passeando pela costa com amigos" loading="lazy">
+        </button>
+        <button type="button" class="gallery-item gallery-item--wide" data-gallery-index="6" aria-label="Ampliar: encontro na conferência">
+          <img src="assets/photo-07.jpg" alt="Levi e Nikki reunidos com amigos durante a conferência" loading="lazy">
+        </button>
+        <button type="button" class="gallery-item gallery-item--portrait" data-gallery-index="7" aria-label="Ampliar: pôr do sol em boa companhia">
+          <img src="assets/photo-10.jpg" alt="Levi e Nikki com um amigo durante o pôr do sol" loading="lazy">
+        </button>
+        <button type="button" class="gallery-item gallery-item--small" data-gallery-index="8" aria-label="Ampliar: noite com amigos">
+          <img src="assets/photo-11.jpg" alt="Levi e Nikki aproveitando a noite com amigos" loading="lazy">
+        </button>
+        <button type="button" class="gallery-item gallery-item--wide" data-gallery-index="9" aria-label="Ampliar: encontro com pessoas queridas no Brasil">
+          <img src="assets/gallery-family-01.jpeg" alt="Levi e Nikki reunidos com pessoas queridas no Brasil" loading="lazy">
+        </button>
+        <button type="button" class="gallery-item gallery-item--portrait" data-gallery-index="10" aria-label="Ampliar: momento com amigos">
+          <img src="assets/gallery-friends-01.jpeg" alt="Levi e Nikki sorrindo ao lado de amigos" loading="lazy">
+        </button>
+        <button type="button" class="gallery-item gallery-item--hero" data-gallery-index="11" aria-label="Ampliar: encontro com a família">
+          <img src="assets/gallery-family-02.jpeg" alt="Levi e Nikki reunidos com a família" loading="lazy">
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <dialog class="gallery-lightbox" id="galleryLightbox" aria-label="Foto ampliada">
+    <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Fechar foto">×</button>
+    <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Foto anterior">‹</button>
+    <figure>
+      <img id="lightboxImage" src="" alt="">
+      <figcaption id="lightboxCaption"></figcaption>
+    </figure>
+    <button type="button" class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Próxima foto">›</button>
+  </dialog>
+
+  <!-- 6. CONTRIBUIÇÃO / PRESENTES -->
+  <section id="presentes" class="gifts-section">
+    <div class="sunflower-divider">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="#F4B400" aria-hidden="true">
+        <circle cx="12" cy="12" r="4" fill="#603813"/>
+        <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1l2.1-2.1M17 7l2.1-2.1" stroke="#F4B400" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h2 class="section-title">Contribuições</h2>
+    <p class="section-subtitle">
+      A presença de vocês é o nosso maior presente. Se também quiserem nos presentear, deixamos as opções para contribuir com o começo da nossa vida a dois.
+    </p>
+
+    <div class="gifts-grid">
+      <!-- Levi · Pix (Brasil) -->
+      <div class="gift-person gift-person--levi">
+        <img class="gift-character gift-character--levi" src="assets/levi-contribuicao.png" alt="Ilustração de Levi pedindo uma ajudinha com bom humor" loading="lazy">
+        <div class="gift-card gift-card--levi">
+        <div class="gift-header">
+          <span class="gift-flag" aria-hidden="true">🇧🇷</span>
+          <div>
+            <h3 class="gift-title">Levi · Pix (Brasil)</h3>
+            <span style="font-size:0.85rem; color:var(--text-muted);">Transferência instantânea em Reais (R$)</span>
+          </div>
+        </div>
+
+        <p style="color:#4B443E; font-size:0.95rem; margin-bottom: 1.5rem;">
+          Você pode transferir diretamente usando a chave Pix abaixo:
+        </p>
+
+        <div class="pix-box">
+          <div>
+            <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-weight:600; display:block; margin-bottom:2px;">Chave Pix (Celular)</span>
+            <span class="pix-key" id="pixValue">11933157405</span>
+          </div>
+          <button class="btn-copy" id="copyPixBtn" aria-label="Copiar chave Pix">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span id="copyBtnText">Copiar</span>
+          </button>
+        </div>
+        <p style="font-size:0.8rem; color:#786E65; margin-top:0.85rem; margin-bottom:0;">
+          * Confirme o nome do titular (Levi) antes de enviar.
+        </p>
+        </div>
+      </div>
+
+      <!-- Nikki · Transferência (Ilha de Man) -->
+      <div class="gift-person gift-person--nikki">
+        <img class="gift-character gift-character--nikki" src="assets/nikki-contribuicao-v2.png" alt="Ilustração de Nikki com um olhar carinhoso e divertido" loading="lazy">
+        <div class="gift-card gift-card--nikki">
+        <div class="gift-header">
+          <span class="gift-flag" aria-hidden="true">🇮🇲</span>
+          <div>
+            <h3 class="gift-title">Nikki · Transferência (Ilha de Man)</h3>
+            <span style="font-size:0.85rem; color:var(--text-muted);">Bank Transfer in British Pounds (£)</span>
+          </div>
+        </div>
+
+        <p style="color:#4B443E; font-size:0.95rem; margin-bottom: 1.25rem;">
+          Para amigos e familiares internacionais que preferem contribuir em GBP:
+        </p>
+
+        <ul class="bank-info-list">
+          <li class="bank-info-item">
+            <span class="bank-info-label">Banco</span>
+            <span class="bank-info-val">A confirmar</span>
+          </li>
+          <li class="bank-info-item">
+            <span class="bank-info-label">Conta</span>
+            <span class="bank-info-val">A confirmar</span>
+          </li>
+          <li class="bank-info-item">
+            <span class="bank-info-label">Sort code</span>
+            <span class="bank-info-val">A confirmar</span>
+          </li>
+          <li class="bank-info-item">
+            <span class="bank-info-label">Moeda</span>
+            <span class="bank-info-val">GBP (£)</span>
+          </li>
+        </ul>
+
+        <div class="note-disclaimer">
+          ⚠️ Dados ilustrativos — a confirmar em breve pelos noivos.
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. O GRANDE DIA -->
+  <section id="ograndedia" class="day-section">
+    <div class="shell-container">
+      <div class="sunflower-divider">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#F4B400" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" fill="#603813"/>
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1l2.1-2.1M17 7l2.1-2.1" stroke="#F4B400" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h2 class="section-title">O Grande Dia</h2>
+      <p style="font-family: var(--font-serif); font-size: 1.6rem; color: var(--color-blue-dark); margin-top: -0.25rem; margin-bottom: 2.5rem; font-style: italic;">
+        2 de abril de 2027
+      </p>
+
+      <div class="schedule-cards">
+        <div class="schedule-card">
+          <div class="schedule-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <div class="schedule-time">14h</div>
+          <div class="schedule-label">Chegada dos convidados</div>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin-top:0.75rem; margin-bottom:0;">
+            Recepção com welcome drink e boas-vindas
+          </p>
+        </div>
+
+        <div class="schedule-card featured">
+          <div class="schedule-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+          </div>
+          <div class="schedule-time" style="color:var(--color-blue-dark);">14h30</div>
+          <div class="schedule-label" style="font-weight:600; color:var(--color-blue-deep);">Cerimônia</div>
+          <p style="font-size:0.88rem; color:var(--text-muted); margin-top:0.75rem; margin-bottom:0;">
+            Início pontual da celebração do matrimônio
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. O ESPAÇO -->
+  <section id="espaco" class="venue-section">
+    <div class="venue-inner">
+      <div class="sunflower-divider" aria-hidden="true"></div>
+      <h2 class="section-title">O Espaço</h2>
+      <p class="section-subtitle">Um refúgio rodeado de verde para abençoar a nossa união</p>
+
+      <div class="venue-gallery" aria-label="Fotos do Espaço Nova Carpe Diem">
+        <img class="venue-gallery-main" src="assets/espaco-novo-01.jpeg" alt="Cerimônia ao ar livre entre as árvores do Espaço Nova Carpe Diem" loading="lazy">
+        <img class="venue-gallery-wide" src="assets/espaco-novo-02.jpeg" alt="Salão aberto do Espaço Nova Carpe Diem com vista para o jardim" loading="lazy">
+        <img src="assets/espaco-novo-03.jpeg" alt="Lounge do salão com vista para a cerimônia" loading="lazy">
+        <img src="assets/espaco-novo-04.jpeg" alt="Salão de festas decorado para casamento" loading="lazy">
+        <img src="assets/espaco-novo-05.jpeg" alt="Mesa de doces e bolo decorada com flores" loading="lazy">
+        <img src="assets/espaco-novo-06.jpeg" alt="Salão preparado para a recepção dos convidados" loading="lazy">
+      </div>
+
+      <article class="venue-copy">
+        <h3 class="venue-name">Espaço Nova Carpe Diem</h3>
+        <p class="venue-address">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          Rua do Moinho, 330 — Jardim Branca Flor, Itapecerica da Serra — SP
+        </p>
+        <p>Escolhemos o Espaço Nova Carpe Diem porque as árvores, o verde e a tranquilidade lembram muito o lugar onde a Nikki mora. Celebrar aqui é uma forma de trazer um pedacinho de lá para o nosso casamento no Brasil.</p>
+        <blockquote class="verse-quote">“Pois desde a criação do mundo os atributos invisíveis de Deus, seu eterno poder e sua natureza divina, têm sido claramente vistos, sendo compreendidos por meio das coisas criadas...” <span>Romanos 1:20</span></blockquote>
+        <p>É nesse lugar, cercados pela criação de Deus e pelas pessoas que amamos, que queremos agradecer pela nossa história, fazer nossos votos e começar nossa vida a dois. 🤍</p>
+      </article>
+    </div>
+
+    <div class="venue-map" aria-label="Localização do Espaço Nova Carpe Diem">
+      <iframe title="Mapa do Espaço Nova Carpe Diem" src="https://maps.google.com/maps?q=Rua%20do%20Moinho,%20330,%20Jardim%20Branca%20Flor,%20Itapecerica%20da%20Serra,%20SP&t=&z=14&ie=UTF8&iwloc=&output=embed" loading="lazy" allowfullscreen></iframe>
+      <a href="https://maps.google.com/?q=Rua+do+Moinho,+330,+Jardim+Branca+Flor,+Itapecerica+da+Serra,+SP" target="_blank" rel="noopener noreferrer" class="venue-map-link">Abrir no Google Maps</a>
+    </div>
+  </section>
+
+  <!-- 9. DICAS DE HOSPEDAGEM -->
+  <section id="hospedagem" class="stay-section">
+    <div class="stay-inner">
+      <div class="sunflower-divider" aria-hidden="true"></div>
+      <h2 class="section-title">Dicas de Hospedagem</h2>
+      <p class="section-subtitle">Para quem vem de longe celebrar esse dia com a gente</p>
+
+      <div class="stay-panel">
+        <span class="stay-kicker">Em breve</span>
+        <h3>Estamos preparando as melhores opções para vocês</h3>
+        <p>Vamos reunir aqui sugestões de hospedagem próximas ao espaço, com informações de localização e deslocamento para facilitar a organização da viagem.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. ENCERRAMENTO (FOOTER) -->
+  <footer class="wedding-footer">
+    <div class="footer-content">
+      <p class="footer-text">
+        "Estamos contando os dias para celebrar, comer, beber, dançar, cantar e criar memórias incríveis ao lado de vocês."
+      </p>
+
+      <div class="footer-flags">
+        <span>See you in Brazil!</span>
+        <span>🇧🇷 ❤️ 🇬🇧</span>
+      </div>
+
+      <img class="footer-logo" src="assets/logo-ln-flowers.svg" alt="Logo floral L e N">
+
+
+      <div class="footer-sub">
+        © 2027 · Levi &amp; Nicola Wedding
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast de Notificação -->
+  <div class="toast-feedback" id="feedbackToast" role="status" aria-live="polite">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F4B400" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <span id="toastMsg">Copiado com sucesso!</span>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Menu Mobile Toggle
+      const navToggle = document.getElementById('navToggle');
+      const navMenu = document.getElementById('navMenu');
+      const topNav = document.querySelector('.top-nav');
+
+      const syncHeaderBackground = () => {
+        topNav?.classList.toggle('is-scrolled', window.scrollY > 24);
+      };
+      syncHeaderBackground();
+      window.addEventListener('scroll', syncHeaderBackground, { passive: true });
+
+      if (navToggle && navMenu) {
+        navToggle.addEventListener('click', () => {
+          navMenu.classList.toggle('open');
+          const isOpen = navMenu.classList.contains('open');
+          navToggle.setAttribute('aria-expanded', String(isOpen));
+          navToggle.setAttribute('aria-label', isOpen ? 'Fechar Menu de Navegação' : 'Abrir Menu de Navegação');
+        });
+
+        // Fechar ao clicar em qualquer item
+        navMenu.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            navMenu.classList.remove('open');
+            navToggle.setAttribute('aria-expanded', 'false');
+            navToggle.setAttribute('aria-label', 'Abrir Menu de Navegação');
+          });
+        });
+      }
+
+      // 2. Contagem Regressiva Real até 02 de abril de 2027 00:00:00 (Horário de Brasília)
+      const targetDate = new Date('2027-04-02T00:00:00-03:00').getTime();
+
+      const elDays = document.getElementById('countDays');
+      const elHours = document.getElementById('countHours');
+      const elMinutes = document.getElementById('countMinutes');
+      const elSeconds = document.getElementById('countSeconds');
+
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const difference = targetDate - now;
+
+        if (difference > 0) {
+          const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+          elDays.textContent = String(days).padStart(2, '0');
+          elHours.textContent = String(hours).padStart(2, '0');
+          elMinutes.textContent = String(minutes).padStart(2, '0');
+          elSeconds.textContent = String(seconds).padStart(2, '0');
+        } else {
+          elDays.textContent = '00';
+          elHours.textContent = '00';
+          elMinutes.textContent = '00';
+          elSeconds.textContent = '00';
+        }
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+
+      // 3. Toast Helper
+      const toast = document.getElementById('feedbackToast');
+      const toastMsg = document.getElementById('toastMsg');
+      let toastTimeout;
+
+      function showToast(message) {
+        if (!toast) return;
+        toastMsg.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 3200);
+      }
+
+      // 4. Copiar Chave Pix
+      const copyPixBtn = document.getElementById('copyPixBtn');
+      const copyBtnText = document.getElementById('copyBtnText');
+      const pixValue = document.getElementById('pixValue');
+
+      if (copyPixBtn && pixValue) {
+        copyPixBtn.addEventListener('click', async () => {
+          const key = pixValue.textContent.trim();
+          try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              await navigator.clipboard.writeText(key);
+            } else {
+              // Fallback caso clipboard API esteja restrita
+              const textArea = document.createElement('textarea');
+              textArea.value = key;
+              document.body.appendChild(textArea);
+              textArea.select();
+              document.execCommand('copy');
+              document.body.removeChild(textArea);
+            }
+            copyBtnText.textContent = 'Copiado! ✓';
+            showToast('Chave Pix copiada com sucesso! 💛');
+            setTimeout(() => {
+              copyBtnText.textContent = 'Copiar';
+            }, 2500);
+          } catch (err) {
+            showToast('Erro ao copiar. Selecione manualmente a chave.');
+          }
+        });
+      }
+
+
+      // 5. Entradas suaves conforme as seções aparecem
+      const revealTargets = document.querySelectorAll('.section-title, .section-subtitle, .countdown-card, .timeline-item, .gallery-item, .gift-card, .schedule-card, .venue-gallery, .venue-copy');
+      revealTargets.forEach((element, index) => {
+        element.setAttribute('data-reveal', index % 2 && element.classList.contains('timeline-item') ? 'right' : 'up');
+        element.style.setProperty('--reveal-delay', `${Math.min(index % 4, 3) * 70}ms`);
+      });
+      if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.14, rootMargin: '0px 0px -6% 0px' });
+        revealTargets.forEach(element => revealObserver.observe(element));
+      } else {
+        revealTargets.forEach(element => element.classList.add('is-visible'));
+      }
+
+      // 6. Galeria: carrossel no mobile e lightbox em qualquer tela
+      const galleryTrack = document.getElementById('galleryTrack');
+      const galleryItems = [...document.querySelectorAll('.gallery-item')];
+      const lightbox = document.getElementById('galleryLightbox');
+      const lightboxImage = document.getElementById('lightboxImage');
+      const lightboxCaption = document.getElementById('lightboxCaption');
+      let activeGalleryIndex = 0;
+
+      const showGalleryImage = index => {
+        if (!galleryItems.length || !lightbox || !lightboxImage) return;
+        activeGalleryIndex = (index + galleryItems.length) % galleryItems.length;
+        const image = galleryItems[activeGalleryIndex].querySelector('img');
+        lightboxImage.src = image.src;
+        lightboxImage.alt = image.alt;
+        lightboxCaption.textContent = image.alt;
+      };
+
+      galleryItems.forEach((item, index) => item.addEventListener('click', () => {
+        showGalleryImage(index);
+        if (typeof lightbox.showModal === 'function') lightbox.showModal();
+      }));
+      document.getElementById('lightboxClose')?.addEventListener('click', () => lightbox.close());
+      document.getElementById('lightboxPrev')?.addEventListener('click', () => showGalleryImage(activeGalleryIndex - 1));
+      document.getElementById('lightboxNext')?.addEventListener('click', () => showGalleryImage(activeGalleryIndex + 1));
+      lightbox?.addEventListener('click', event => { if (event.target === lightbox) lightbox.close(); });
+      document.getElementById('galleryPrev')?.addEventListener('click', () => galleryTrack?.scrollBy({ left: -window.innerWidth * .82, behavior: 'smooth' }));
+      document.getElementById('galleryNext')?.addEventListener('click', () => galleryTrack?.scrollBy({ left: window.innerWidth * .82, behavior: 'smooth' }));
+
+    });
+  </script>
+<script>
+/* Skip artifact shell — fixed helpers served beside every artifact. */
+(function () {
+  "use strict";
+
+  var fmt = {
+    num: function (v, opts) { return new Intl.NumberFormat("pt-BR", opts || {}).format(v); },
+    brl: function (v) { return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v); },
+    pct: function (v) { return new Intl.NumberFormat("pt-BR", { style: "percent", maximumFractionDigits: 1 }).format(v); }
+  };
+
+  // axisFmt keeps axis tick labels short (compact notation) so long values
+  // (e.g. full BRL amounts) never clip against the plot edge.
+  function axisFmt(v) {
+    return fmt.num(v, { notation: "compact", maximumFractionDigits: 1 });
+  }
+
+  // format accepts a function OR one of the fmt names ("num" | "brl" | "pct").
+  function coerceFormat(spec) {
+    if (typeof spec === "function") return spec;
+    if (typeof spec === "string" && fmt[spec]) return fmt[spec];
+    return function (v) { return fmt.num(v); };
+  }
+
+  function accent() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#2563eb";
+  }
+  function mutedColor() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--text-muted").trim() || "#5b6472";
+  }
+  function svgEl(tag, attrs) {
+    var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  function frame(el, w, h) {
+    var svg = svgEl("svg", { viewBox: "0 0 " + w + " " + h, role: "img" });
+    el.innerHTML = "";
+    el.appendChild(svg);
+    return svg;
+  }
+
+  // maxOf guards the axis scale: empty values would give -Infinity (truthy,
+  // so "|| 1" can't catch it) and a non-positive max would flip the chart.
+  function maxOf(values) {
+    var m = values.length ? Math.max.apply(null, values) : 0;
+    return m > 0 ? m : 1;
+  }
+
+  // bar(el, {labels:[], values:[], color?, format?}) — vertical bar chart.
+  function bar(el, cfg) {
+    var W = 640, H = 280, padL = 46, padB = 30, padT = 12;
+    var svg = frame(el, W, H);
+    var max = maxOf(cfg.values);
+    var n = cfg.values.length;
+    var plotW = W - padL - 12, plotH = H - padT - padB;
+    var step = plotW / n, bw = Math.min(step * 0.62, 64);
+    var color = cfg.color || accent();
+    var f = coerceFormat(cfg.format);
+    for (var g = 0; g <= 4; g++) {
+      var gy = padT + plotH - (plotH * g) / 4;
+      svg.appendChild(svgEl("line", { x1: padL, y1: gy, x2: W - 12, y2: gy, stroke: "currentColor", "stroke-opacity": 0.08 }));
+      var lbl = svgEl("text", { x: padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10, fill: mutedColor() });
+      lbl.textContent = axisFmt((max * g) / 4);
+      svg.appendChild(lbl);
+    }
+    cfg.values.forEach(function (v, i) {
+      var bh = Math.max(0, (v / max) * plotH);
+      var x = padL + i * step + (step - bw) / 2;
+      var y = padT + plotH - bh;
+      var r = svgEl("rect", { x: x, y: y, width: bw, height: bh, rx: 4, fill: color });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + f(v);
+      r.appendChild(t);
+      svg.appendChild(r);
+      var tx = svgEl("text", { x: x + bw / 2, y: H - 10, "text-anchor": "middle", "font-size": 11, fill: mutedColor() });
+      tx.textContent = cfg.labels[i];
+      svg.appendChild(tx);
+    });
+  }
+
+  // line(el, {labels:[], values:[], color?, format?}) — single-series line.
+  function line(el, cfg) {
+    var W = 640, H = 280, padL = 46, padB = 30, padT = 12;
+    var svg = frame(el, W, H);
+    var max = maxOf(cfg.values);
+    var n = cfg.values.length;
+    var plotW = W - padL - 16, plotH = H - padT - padB;
+    var color = cfg.color || accent();
+    var f = coerceFormat(cfg.format);
+    for (var g = 0; g <= 4; g++) {
+      var gy = padT + plotH - (plotH * g) / 4;
+      svg.appendChild(svgEl("line", { x1: padL, y1: gy, x2: W - 16, y2: gy, stroke: "currentColor", "stroke-opacity": 0.08 }));
+      var lbl = svgEl("text", { x: padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10, fill: mutedColor() });
+      lbl.textContent = axisFmt((max * g) / 4);
+      svg.appendChild(lbl);
+    }
+    var pts = cfg.values.map(function (v, i) {
+      var x = padL + (n === 1 ? plotW / 2 : (plotW * i) / (n - 1));
+      var y = padT + plotH - (v / max) * plotH;
+      return [x, y];
+    });
+    var d = pts.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
+    svg.appendChild(svgEl("path", { d: d, fill: "none", stroke: color, "stroke-width": 2, "stroke-linejoin": "round" }));
+    pts.forEach(function (p, i) {
+      var c = svgEl("circle", { cx: p[0], cy: p[1], r: 3.5, fill: color });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + f(cfg.values[i]);
+      c.appendChild(t);
+      svg.appendChild(c);
+      var tx = svgEl("text", { x: p[0], y: H - 10, "text-anchor": "middle", "font-size": 11, fill: mutedColor() });
+      tx.textContent = cfg.labels[i];
+      svg.appendChild(tx);
+    });
+  }
+
+  // donut(el, {labels:[], values:[], colors?}) — donut with center total.
+  function donut(el, cfg) {
+    var W = 320, H = 280, cx = W / 2, cy = H / 2, R = 92, r = 58;
+    var svg = frame(el, W, H);
+    var total = cfg.values.reduce(function (a, b) { return a + b; }, 0) || 1;
+    var palette = cfg.colors || [accent(), "#1baf7a", "#eda100", "#e34948", "#4a3aa7", "#e87ba4"];
+    var a0 = -Math.PI / 2;
+    cfg.values.forEach(function (v, i) {
+      var a1 = a0 + (v / total) * Math.PI * 2;
+      var large = a1 - a0 > Math.PI ? 1 : 0;
+      var p = ["M", cx + R * Math.cos(a0), cy + R * Math.sin(a0),
+        "A", R, R, 0, large, 1, cx + R * Math.cos(a1), cy + R * Math.sin(a1),
+        "L", cx + r * Math.cos(a1), cy + r * Math.sin(a1),
+        "A", r, r, 0, large, 0, cx + r * Math.cos(a0), cy + r * Math.sin(a0), "Z"].join(" ");
+      var path = svgEl("path", { d: p, fill: palette[i % palette.length] });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + fmt.num(v) + " (" + fmt.pct(v / total) + ")";
+      path.appendChild(t);
+      svg.appendChild(path);
+      a0 = a1;
+    });
+    var center = svgEl("text", { x: cx, y: cy + 5, "text-anchor": "middle", "font-size": 20, "font-weight": 650, fill: "currentColor" });
+    center.textContent = fmt.num(total);
+    svg.appendChild(center);
+  }
+
+  window.skipShell = { fmt: fmt };
+  window.skipChart = { bar: bar, line: line, donut: donut };
+})();
+
+</script>
+</body>
+</html>
