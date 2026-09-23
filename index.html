@@ -2020,13 +2020,19 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     .gifts-section { max-width:1180px; padding-bottom:0; overflow:hidden; }
     .gifts-section > .section-title, .gifts-section > .section-subtitle { text-align:center; margin-left:auto !important; margin-right:auto !important; }
     .gifts-grid { grid-template-columns:1fr 1fr; gap:2rem; max-width:960px; margin-inline:auto; align-items:end; }
-    .gift-person { position:relative; min-height:455px; display:flex; align-items:flex-end; box-sizing:border-box; }
-    .gift-card { width:clamp(280px,29vw,350px); min-height:420px; box-sizing:border-box; position:relative; z-index:2; overflow:visible; }
+    .gift-person { position:relative; min-height:405px; display:flex; align-items:flex-end; box-sizing:border-box; }
+    .gift-card { width:clamp(280px,29vw,350px); height:356px; min-height:0; box-sizing:border-box; position:relative; z-index:2; overflow:visible; }
+    .gift-card--nikki > p { margin-bottom:.65rem !important; }
+    .gift-card--nikki .bank-info-list { gap:.35rem; margin-bottom:.45rem; }
+    .gift-card--nikki .bank-info-item { padding:.4rem .5rem; }
+    .gift-card--nikki .note-disclaimer { margin-top:.35rem; }
     .gift-person--levi { justify-content:flex-end; padding-left:150px; }
     .gift-person--nikki { justify-content:flex-start; padding-right:150px; }
     .gift-character { position:absolute; z-index:1; width:280px; height:auto; max-height:445px; object-fit:contain; margin:0; border-radius:0; background:transparent; pointer-events:none; }
     .gift-character--levi { left:-20px; bottom:0; }
     .gift-character--nikki { right:-18px; bottom:0; }
+    .gift-speech { position:absolute; z-index:3; left:-24px; top:-44px; padding:.62rem .9rem; border:2px solid #34465f; border-radius:50%; background:#fff; color:#34465f; font:800 .82rem/1.15 var(--font-sans); white-space:nowrap; transform:rotate(-4deg); box-shadow:0 5px 14px rgba(28,43,61,.16); }
+    .gift-speech::after { content:""; position:absolute; left:28px; bottom:-13px; width:18px; height:18px; background:#fff; border-right:2px solid #34465f; border-bottom:2px solid #34465f; transform:rotate(45deg) skew(8deg,8deg); }
     .venue-inner > .sunflower-divider, .venue-inner > .section-title, .venue-inner > .section-subtitle { margin-left:auto !important; margin-right:auto !important; text-align:center !important; }
 
     .footer-logo { display:block; width:min(210px,52vw); height:auto; margin:1rem auto 1.25rem; }
@@ -2077,10 +2083,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       .welcome-message { margin:0; }
       .timeline-section { background-attachment:scroll; }
       .gifts-grid { grid-template-columns:1fr; max-width:560px; gap:3rem; }
-      .gift-person { min-height:455px; }
+      .gift-person { min-height:405px; }
       .gift-person--levi { justify-content:flex-end; padding-left:120px; }
       .gift-person--nikki { justify-content:flex-start; padding-right:120px; }
-      .gift-card { width:min(100%,350px); min-height:420px; }
+      .gift-card { width:min(100%,350px); min-height:0; }
       .gift-character { width:240px; }
       .gallery-section .gallery-mosaic { display:flex; grid-template-rows:none; grid-auto-columns:auto; grid-auto-flow:row; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; padding:4px 7vw 18px; }
       .gallery-item,.gallery-item--hero,.gallery-item--portrait,.gallery-item--wide,.gallery-item--small { flex:0 0 82vw; height:clamp(360px,110vw,510px); grid-column:auto; grid-row:auto; scroll-snap-align:center; border-radius:14px; }
@@ -2101,19 +2107,20 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       .gift-person { min-height:0; padding:0; align-items:flex-end; overflow:visible; }
       .gift-person--levi { justify-content:flex-end; z-index:1; }
       .gift-person--nikki { justify-content:flex-start; z-index:2; }
-      .gift-card { width:294px; min-height:0; padding:.85rem .9rem .9rem; }
+      .gift-card { width:280px; height:auto; min-height:0; padding:.7rem .8rem .75rem; }
       .gift-card p, .gift-card li { font-size:.84rem !important; line-height:1.45 !important; }
-      .gift-card > p { margin-bottom:.75rem !important; }
-      .gift-card .gift-header { margin-bottom:.85rem; padding-bottom:.75rem; }
+      .gift-card > p { margin-bottom:.55rem !important; }
+      .gift-card .gift-header { margin-bottom:.6rem; padding-bottom:.55rem; }
       .gift-card .gift-title { font-size:1.08rem; line-height:1.12; }
-      .gift-card .pix-box { margin-top:auto; padding:.75rem; }
+      .gift-card .pix-box { margin-top:.35rem; padding:.65rem; }
       .gift-card .pix-key { font-size:.88rem; letter-spacing:.03em; white-space:nowrap; }
-      .gift-card .bank-info-list { gap:.55rem; }
-      .gift-card .bank-info-item { padding:.65rem .7rem; }
-      .gift-card .note-disclaimer { margin-top:.65rem; font-size:.78rem; line-height:1.4; }
+      .gift-card .bank-info-list { gap:.35rem; margin-bottom:.55rem; }
+      .gift-card .bank-info-item { padding:.48rem .55rem; }
+      .gift-card .note-disclaimer { margin-top:.45rem; font-size:.76rem; line-height:1.35; }
       .gift-character { width:185px; height:270px; max-height:none; bottom:0; object-fit:contain; object-position:50% bottom; }
       .gift-character--levi { left:-12px; bottom:-3rem; }
       .gift-character--nikki { right:-30px; bottom:-1.75rem; }
+      .gift-speech { left:-4px; top:34px; padding:.5rem .68rem; font-size:.7rem; }
       .venue-gallery { grid-template-rows:220px 170px 150px 150px; }
     }
   </style>
@@ -2404,6 +2411,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     <div class="gifts-grid">
       <!-- Levi · Pix (Brasil) -->
       <div class="gift-person gift-person--levi">
+        <span class="gift-speech">10 conto ou 10 pounds?</span>
         <img class="gift-character gift-character--levi" src="assets/levi-contribuicao-v2.png" alt="Ilustração de Levi apresentando as informações de contribuição" loading="lazy">
         <div class="gift-card gift-card--levi">
         <div class="gift-header">
@@ -2682,7 +2690,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         'Estamos preparando as melhores opções para vocês': 'We are preparing the best options for you',
         'Vamos reunir aqui sugestões de hospedagem próximas ao espaço, com informações de localização e deslocamento para facilitar a organização da viagem.': 'We will share accommodation suggestions near the venue, along with location and transport information to make planning your trip easier.',
         '"Estamos contando os dias para celebrar, comer, beber, dançar, cantar e criar memórias incríveis ao lado de vocês."': '“We are counting down the days until we can celebrate, eat, drink, dance, sing and create wonderful memories with you.”',
-        'Copiado com sucesso!': 'Copied successfully!'
+        'Copiado com sucesso!': 'Copied successfully!',
+        '10 conto ou 10 pounds?': '10 reais or 10 pounds?'
       }));
 
       const englishAttributes = new Map(Object.entries({
