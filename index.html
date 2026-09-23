@@ -2041,6 +2041,12 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     .nav-toggle-btn[aria-expanded="true"] line:nth-child(2) { opacity:0; }
     .nav-toggle-btn[aria-expanded="true"] line:nth-child(3) { transform:translateY(-6px) rotate(-45deg); }
 
+    .nav-container > nav { margin-left:auto; }
+    .language-switch { display:flex; align-items:center; gap:.2rem; margin-left:1rem; padding:.2rem; border:1px solid rgba(255,255,255,.42); border-radius:999px; background:rgba(52,70,95,.24); backdrop-filter:blur(8px); }
+    .language-button { display:inline-flex; align-items:center; gap:.28rem; min-height:32px; padding:.28rem .55rem; border:0; border-radius:999px; background:transparent; color:#fff; font:700 .72rem/1 var(--font-sans); letter-spacing:.04em; cursor:pointer; transition:background .2s ease,color .2s ease; }
+    .language-button[aria-pressed="true"] { background:#fff; color:#34465f; }
+    .language-button:focus-visible { outline:2px solid #fff; outline-offset:2px; }
+
     /* Hospedagem: reserva o espaço sem anunciar opções ainda não verificadas */
     .stay-section { padding:clamp(4rem,7vw,5rem) 1.5rem; background:#A2B6D1; color:#fff; text-align:center; }
     .stay-inner { width:min(100%,900px); margin:0 auto; }
@@ -2050,6 +2056,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     .stay-panel p { max-width:650px; margin:0 auto; font:500 clamp(1rem,1.35vw,1.1rem)/1.75 var(--font-sans); color:#fff; }
 
     @media (max-width:850px) {
+      .nav-container { gap:.45rem; }
+      .nav-monogram { margin-right:auto; }
+      .nav-container > nav { margin-left:0; }
+      .language-switch { margin-left:0; }
       .nav-container > nav { position:absolute; top:100%; left:0; right:0; }
       .nav-container > nav .nav-links { position:static; width:100%; box-sizing:border-box; }
       .welcome-section { min-height:540px; background-position:70% center; background-size:cover; background-attachment:scroll; align-items:flex-end; }
@@ -2072,6 +2082,8 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       .venue-gallery img:last-child { display:block; }
     }
     @media (max-width:560px) {
+      .hero-wedding { padding-top:70px !important; }
+      .language-button { min-height:30px; padding:.25rem .45rem; font-size:.68rem; }
       .welcome-section { min-height:510px; padding:3rem 1.25rem 2.5rem; align-items:flex-end; background-position:96% center; }
       .welcome-content { margin:0; }
       .welcome-title { font-size:clamp(1.5rem,6.6vw,1.8rem); }
@@ -2106,13 +2118,6 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       <a href="#inicio" class="nav-monogram" aria-label="Levi e Nikki">
         <img class="nav-logo" src="assets/logo-ln-transparent.svg" alt="" aria-hidden="true">
       </a>
-      <button class="nav-toggle-btn" id="navToggle" aria-label="Abrir Menu de Navegação" aria-expanded="false" aria-controls="navMenu">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
       <nav>
         <ul class="nav-links" id="navMenu">
           <li><a href="#inicio">Início</a></li>
@@ -2125,6 +2130,17 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           <li><a href="#hospedagem">Hospedagem</a></li>
         </ul>
       </nav>
+      <div class="language-switch" role="group" aria-label="Selecionar idioma">
+        <button type="button" class="language-button" data-language="pt" aria-pressed="true" aria-label="Português"><span aria-hidden="true">🇧🇷</span> PT</button>
+        <button type="button" class="language-button" data-language="en" aria-pressed="false" aria-label="English"><span aria-hidden="true">🇬🇧</span> EN</button>
+      </div>
+      <button class="nav-toggle-btn" id="navToggle" aria-label="Abrir Menu de Navegação" aria-expanded="false" aria-controls="navMenu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
     </div>
   </header>
 
@@ -2582,6 +2598,185 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // Idiomas: mantém uma única página, traduzindo o conteúdo sem recarregar.
+      const englishText = new Map(Object.entries({
+        'Início': 'Home',
+        'Contagem': 'Countdown',
+        'História': 'Our Story',
+        'Galeria': 'Gallery',
+        'Contribuições': 'Contributions',
+        'O Grande Dia': 'The Big Day',
+        'O Espaço': 'The Venue',
+        'Hospedagem': 'Accommodation',
+        'Sejam bem-vindos': 'Welcome',
+        'ao nosso site!': 'to our wedding website!',
+        'A melhor forma de compartilhar esse momento com vocês é vivendo juntos esse sonho!': 'The best way to share this moment with you is to live this dream together!',
+        'Contagem Regressiva': 'Countdown',
+        'Cada segundo nos aproxima do momento mais esperado de nossas vidas': 'Every second brings us closer to the most anticipated moment of our lives',
+        'Dias': 'Days',
+        'Horas': 'Hours',
+        'Minutos': 'Minutes',
+        'Segundos': 'Seconds',
+        'Nossa História': 'Our Story',
+        'Os passos que o amor traçou através dos oceanos até nos unir para sempre': 'The journey love traced across the oceans to bring us together forever',
+        'Levi recebe os pais de Nikki em sua casa no Brasil.': "Levi welcomes Nikki’s parents into his home in Brazil.",
+        'O começo de tudo': 'Where it all began',
+        '2024 · Ilha de Man': '2024 · Isle of Man',
+        'Levi viaja para a Ilha de Man e conhece Nikki durante a conferência.': 'Levi travels to the Isle of Man and meets Nikki during the conference.',
+        'Nosso primeiro encontro': 'Our first meeting',
+        'Julho de 2025': 'July 2025',
+        'Em um novo encontro na Ilha de Man, dez dias juntos aproximam os dois e revelam que havia algo a mais entre eles.': 'When they meet again on the Isle of Man, ten days together bring them closer and reveal that there is something more between them.',
+        'De volta à conferência': 'Back at the conference',
+        'Algo a mais no ar': 'Something more in the air',
+        'Dezembro de 2025': 'December 2025',
+        'Após despedida no aeroporto e conversas à distância, Levi volta à Ilha de Man; um mês juntos confirma o sentimento e vem o pedido de namoro.': 'After saying goodbye at the airport and talking from afar, Levi returns to the Isle of Man. A month together confirms their feelings, and he asks Nikki to be his girlfriend.',
+        'Certeza no coração': 'Certainty in our hearts',
+        'Nosso dezembro': 'Our December',
+        'Agosto de 2026': 'August 2026',
+        'Nikki vem ao Brasil e Levi faz o pedido de casamento.': 'Nikki comes to Brazil and Levi asks her to marry him.',
+        'O grande pedido': 'The proposal',
+        'Noivos!': 'Engaged!',
+        '"Criamos este site para reunir todas as informações importantes sobre o nosso dia, especialmente para quem estará viajando de longe."': '“We created this website to gather all the important information about our day, especially for those travelling from afar.”',
+        'Galeria de Lembranças': 'Gallery of Memories',
+        'Memórias ao lado das pessoas queridas que fazem parte da nossa história': 'Memories with the loved ones who are part of our story',
+        'Deslize para ver mais': 'Swipe to see more',
+        'A presença de vocês é o nosso maior presente. Se também quiserem nos presentear, deixamos as opções para contribuir com o começo da nossa vida a dois.': 'Your presence is the greatest gift we could receive. If you would also like to give us a present, here are a few ways to contribute to the beginning of our life together.',
+        'Levi · Pix (Brasil)': 'Levi · Pix (Brazil)',
+        'Transferência instantânea em Reais (R$)': 'Instant transfer in Brazilian reais (R$)',
+        'Você pode transferir diretamente usando a chave Pix abaixo:': 'You can transfer directly using the Pix key below:',
+        'Chave Pix (Celular)': 'Pix key (Mobile number)',
+        'Copiar': 'Copy',
+        '* Confirme o nome do titular (Levi) antes de enviar.': '* Please confirm the account holder’s name (Levi) before sending.',
+        'Nikki · Transferência (Ilha de Man)': 'Nikki · Bank transfer (Isle of Man)',
+        'Para amigos e familiares internacionais que preferem contribuir em GBP:': 'For international friends and family who would prefer to contribute in GBP:',
+        'Banco': 'Bank',
+        'Conta': 'Account',
+        'A confirmar': 'To be confirmed',
+        'Moeda': 'Currency',
+        '⚠️ Dados ilustrativos — a confirmar em breve pelos noivos.': '⚠️ Placeholder details — to be confirmed by the couple soon.',
+        '2 de abril de 2027': '2 April 2027',
+        'Chegada dos convidados': 'Guest arrival',
+        'Recepção com welcome drink e boas-vindas': 'Welcome reception and drinks',
+        'Cerimônia': 'Ceremony',
+        'Início pontual da celebração do matrimônio': 'The wedding ceremony begins promptly',
+        '14h': '2:00 PM',
+        '14h30': '2:30 PM',
+        'Um refúgio rodeado de verde para abençoar a nossa união': 'A peaceful green setting in which to bless our union',
+        'Escolhemos o Espaço Nova Carpe Diem porque as árvores, o verde e a tranquilidade lembram muito o lugar onde a Nikki mora. Celebrar aqui é uma forma de trazer um pedacinho de lá para o nosso casamento no Brasil.': 'We chose Espaço Nova Carpe Diem because its trees, greenery and peaceful atmosphere remind us so much of where Nikki lives. Celebrating here brings a little piece of her home to our wedding in Brazil.',
+        '“Pois desde a criação do mundo os atributos invisíveis de Deus, seu eterno poder e sua natureza divina, têm sido claramente vistos, sendo compreendidos por meio das coisas criadas...”': '“For the invisible things of him from the creation of the world are clearly seen, being understood by the things that are made...”',
+        'Romanos 1:20': 'Romans 1:20',
+        'É nesse lugar, cercados pela criação de Deus e pelas pessoas que amamos, que queremos agradecer pela nossa história, fazer nossos votos e começar nossa vida a dois. 🤍': 'In this place, surrounded by God’s creation and the people we love, we want to give thanks for our story, exchange our vows and begin our life together. 🤍',
+        'Abrir no Google Maps': 'Open in Google Maps',
+        'Dicas de Hospedagem': 'Accommodation Tips',
+        'Para quem vem de longe celebrar esse dia com a gente': 'For everyone travelling from afar to celebrate with us',
+        'Em breve': 'Coming soon',
+        'Estamos preparando as melhores opções para vocês': 'We are preparing the best options for you',
+        'Vamos reunir aqui sugestões de hospedagem próximas ao espaço, com informações de localização e deslocamento para facilitar a organização da viagem.': 'We will share accommodation suggestions near the venue, along with location and transport information to make planning your trip easier.',
+        '"Estamos contando os dias para celebrar, comer, beber, dançar, cantar e criar memórias incríveis ao lado de vocês."': '“We are counting down the days until we can celebrate, eat, drink, dance, sing and create wonderful memories with you.”',
+        'Copiado com sucesso!': 'Copied successfully!'
+      }));
+
+      const englishAttributes = new Map(Object.entries({
+        'Navegação Principal': 'Main navigation',
+        'Abrir Menu de Navegação': 'Open navigation menu',
+        'Fechar Menu de Navegação': 'Close navigation menu',
+        'Selecionar idioma': 'Select language',
+        'Boas-vindas de Levi e Nikki': 'Welcome from Levi and Nikki',
+        'Navegação da galeria': 'Gallery navigation',
+        'Foto anterior': 'Previous photo',
+        'Próxima foto': 'Next photo',
+        'Foto ampliada': 'Enlarged photo',
+        'Fechar foto': 'Close photo',
+        'Copiar chave Pix': 'Copy Pix key',
+        'Fotos do Espaço Nova Carpe Diem': 'Photos of Espaço Nova Carpe Diem',
+        'Localização do Espaço Nova Carpe Diem': 'Location of Espaço Nova Carpe Diem',
+        'Mapa do Espaço Nova Carpe Diem': 'Map of Espaço Nova Carpe Diem',
+        'Levi e Nikki — São Paulo, Brasil': 'Levi and Nikki — São Paulo, Brazil',
+        'Levi com os pais de Nikki torcendo pelo São Paulo': 'Levi with Nikki’s parents supporting São Paulo FC',
+        'Levi e Nikki com amigos durante a conferência na Ilha de Man': 'Levi and Nikki with friends during the conference on the Isle of Man',
+        'Levi e Nikki reunidos com amigos durante a conferência': 'Levi and Nikki with friends during the conference',
+        'Levi e Nikki sentados juntos à beira-mar': 'Levi and Nikki sitting together by the sea',
+        'Levi e Nikki juntos em uma fotografia instantânea': 'Levi and Nikki together in an instant photograph',
+        'Levi e Nikki juntos durante o Natal': 'Levi and Nikki together at Christmas',
+        'Levi e Nikki celebrando o pedido de casamento': 'Levi and Nikki celebrating their engagement',
+        'Levi e Nikki juntos em um passeio de barco': 'Levi and Nikki together on a boat trip',
+        'Levi e Nikki reunidos com familiares e amigos': 'Levi and Nikki with family and friends',
+        'Nikki em um passeio com amigos': 'Nikki on an outing with friends',
+        'Levi e Nikki celebrando com um grupo de amigos': 'Levi and Nikki celebrating with a group of friends',
+        'Nikki reunida com amigos em um dia de celebração': 'Nikki with friends on a day of celebration',
+        'Levi e Nikki viajando com pessoas queridas': 'Levi and Nikki travelling with loved ones',
+        'Levi e Nikki passeando pela costa com amigos': 'Levi and Nikki walking along the coast with friends',
+        'Levi e Nikki com um amigo durante o pôr do sol': 'Levi and Nikki with a friend at sunset',
+        'Levi e Nikki aproveitando a noite com amigos': 'Levi and Nikki enjoying an evening with friends',
+        'Levi e Nikki reunidos com pessoas queridas no Brasil': 'Levi and Nikki with loved ones in Brazil',
+        'Levi e Nikki sorrindo ao lado de amigos': 'Levi and Nikki smiling with friends',
+        'Levi e Nikki reunidos com a família': 'Levi and Nikki with family',
+        'Cerimônia ao ar livre entre as árvores do Espaço Nova Carpe Diem': 'Outdoor ceremony among the trees at Espaço Nova Carpe Diem',
+        'Salão aberto do Espaço Nova Carpe Diem com vista para o jardim': 'Open hall at Espaço Nova Carpe Diem overlooking the garden',
+        'Lounge do salão com vista para a cerimônia': 'Venue lounge overlooking the ceremony area',
+        'Salão de festas decorado para casamento': 'Wedding reception hall',
+        'Mesa de doces e bolo decorada com flores': 'Dessert and wedding cake table decorated with flowers',
+        'Salão preparado para a recepção dos convidados': 'Hall prepared for the wedding reception',
+        'Ampliar: encontro com pessoas queridas': 'Enlarge: gathering with loved ones',
+        'Ampliar: passeio entre amigos': 'Enlarge: outing with friends',
+        'Ampliar: dia especial em grupo': 'Enlarge: special day with friends',
+        'Ampliar: lembrança com amigos': 'Enlarge: memory with friends',
+        'Ampliar: viagem em boa companhia': 'Enlarge: trip in good company',
+        'Ampliar: passeio na costa com amigos': 'Enlarge: coastal outing with friends',
+        'Ampliar: encontro na conferência': 'Enlarge: conference gathering',
+        'Ampliar: pôr do sol em boa companhia': 'Enlarge: sunset in good company',
+        'Ampliar: noite com amigos': 'Enlarge: evening with friends',
+        'Ampliar: encontro com pessoas queridas no Brasil': 'Enlarge: gathering with loved ones in Brazil',
+        'Ampliar: momento com amigos': 'Enlarge: moment with friends',
+        'Ampliar: encontro com a família': 'Enlarge: family gathering'
+      }));
+
+      const textNodes = [];
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) {
+        const node = walker.currentNode;
+        if (!['SCRIPT', 'STYLE'].includes(node.parentElement?.tagName) && node.nodeValue.trim()) {
+          textNodes.push({ node, original: node.nodeValue });
+        }
+      }
+
+      const translatedAttributes = [];
+      document.querySelectorAll('[aria-label], [title], [alt]').forEach(element => {
+        ['aria-label', 'title', 'alt'].forEach(attribute => {
+          if (element.hasAttribute(attribute)) translatedAttributes.push({ element, attribute, original: element.getAttribute(attribute) });
+        });
+      });
+
+      let currentLanguage = 'pt';
+      const applyLanguage = language => {
+        currentLanguage = language === 'en' ? 'en' : 'pt';
+        document.documentElement.lang = currentLanguage === 'en' ? 'en-GB' : 'pt-BR';
+        document.title = currentLanguage === 'en' ? 'Levi & Nikki — Wedding Website' : 'Site de Casamento — Levi & Nikki';
+
+        textNodes.forEach(({ node, original }) => {
+          const source = original.trim();
+          const replacement = currentLanguage === 'en' ? englishText.get(source) : source;
+          node.nodeValue = replacement ? original.replace(source, replacement) : original;
+        });
+
+        translatedAttributes.forEach(({ element, attribute, original }) => {
+          element.setAttribute(attribute, currentLanguage === 'en' ? (englishAttributes.get(original) || original) : original);
+        });
+
+        document.querySelectorAll('[data-language]').forEach(button => {
+          button.setAttribute('aria-pressed', String(button.dataset.language === currentLanguage));
+        });
+        localStorage.setItem('wedding-language', currentLanguage);
+      };
+
+      document.querySelectorAll('[data-language]').forEach(button => {
+        button.addEventListener('click', () => applyLanguage(button.dataset.language));
+      });
+
+      const savedLanguage = localStorage.getItem('wedding-language');
+      const initialLanguage = savedLanguage || (navigator.language.toLowerCase().startsWith('pt') ? 'pt' : 'en');
+      applyLanguage(initialLanguage);
+
       // 1. Menu Mobile Toggle
       const navToggle = document.getElementById('navToggle');
       const navMenu = document.getElementById('navMenu');
@@ -2598,7 +2793,9 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           navMenu.classList.toggle('open');
           const isOpen = navMenu.classList.contains('open');
           navToggle.setAttribute('aria-expanded', String(isOpen));
-          navToggle.setAttribute('aria-label', isOpen ? 'Fechar Menu de Navegação' : 'Abrir Menu de Navegação');
+          navToggle.setAttribute('aria-label', isOpen
+            ? (currentLanguage === 'en' ? 'Close navigation menu' : 'Fechar Menu de Navegação')
+            : (currentLanguage === 'en' ? 'Open navigation menu' : 'Abrir Menu de Navegação'));
         });
 
         // Fechar ao clicar em qualquer item
@@ -2606,7 +2803,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
           link.addEventListener('click', () => {
             navMenu.classList.remove('open');
             navToggle.setAttribute('aria-expanded', 'false');
-            navToggle.setAttribute('aria-label', 'Abrir Menu de Navegação');
+            navToggle.setAttribute('aria-label', currentLanguage === 'en' ? 'Open navigation menu' : 'Abrir Menu de Navegação');
           });
         });
       }
@@ -2679,13 +2876,13 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
               document.execCommand('copy');
               document.body.removeChild(textArea);
             }
-            copyBtnText.textContent = 'Copiado! ✓';
-            showToast('Chave Pix copiada com sucesso! 💛');
+            copyBtnText.textContent = currentLanguage === 'en' ? 'Copied! ✓' : 'Copiado! ✓';
+            showToast(currentLanguage === 'en' ? 'Pix key copied successfully! 💛' : 'Chave Pix copiada com sucesso! 💛');
             setTimeout(() => {
-              copyBtnText.textContent = 'Copiar';
+              copyBtnText.textContent = currentLanguage === 'en' ? 'Copy' : 'Copiar';
             }, 2500);
           } catch (err) {
-            showToast('Erro ao copiar. Selecione manualmente a chave.');
+            showToast(currentLanguage === 'en' ? 'Could not copy. Please select the key manually.' : 'Erro ao copiar. Selecione manualmente a chave.');
           }
         });
       }
