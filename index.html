@@ -2042,10 +2042,17 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
     .nav-toggle-btn[aria-expanded="true"] line:nth-child(3) { transform:translateY(-6px) rotate(-45deg); }
 
     .nav-container > nav { margin-left:auto; }
-    .language-switch { display:flex; align-items:center; gap:.2rem; margin-left:1rem; padding:.2rem; border:1px solid rgba(255,255,255,.42); border-radius:999px; background:rgba(52,70,95,.24); backdrop-filter:blur(8px); }
-    .language-button { display:inline-flex; align-items:center; gap:.28rem; min-height:32px; padding:.28rem .55rem; border:0; border-radius:999px; background:transparent; color:#fff; font:700 .72rem/1 var(--font-sans); letter-spacing:.04em; cursor:pointer; transition:background .2s ease,color .2s ease; }
-    .language-button[aria-pressed="true"] { background:#fff; color:#34465f; }
+    .language-switch { position:relative; isolation:isolate; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:0; margin-left:1rem; padding:.2rem; border:1px solid rgba(255,255,255,.42); border-radius:999px; background:rgba(52,70,95,.24); backdrop-filter:blur(8px); overflow:hidden; }
+    .language-switch::before { content:""; position:absolute; z-index:-1; top:.2rem; bottom:.2rem; left:.2rem; width:calc(50% - .2rem); border-radius:999px; background:#fff; box-shadow:0 2px 10px rgba(28,43,61,.18); transform:translateX(0); transition:transform .34s cubic-bezier(.22,1,.36,1); }
+    .language-switch[data-active-language="en"]::before { transform:translateX(100%); }
+    .language-button { position:relative; display:inline-flex; align-items:center; justify-content:center; gap:.28rem; min-height:32px; padding:.28rem .55rem; border:0; border-radius:999px; background:transparent; color:#fff; font:700 .72rem/1 var(--font-sans); letter-spacing:.04em; cursor:pointer; transition:color .24s ease,transform .24s ease; }
+    .language-button[aria-pressed="true"] { color:#34465f; }
+    .language-button:active { transform:scale(.95); }
     .language-button:focus-visible { outline:2px solid #fff; outline-offset:2px; }
+
+    .language-transition-target { transition:opacity .16s ease,transform .22s cubic-bezier(.22,1,.36,1),filter .16s ease; }
+    html.is-language-changing .language-transition-target { opacity:0; transform:translateY(5px); filter:blur(2px); }
+    html[lang="en-GB"] .welcome-title { font-size:clamp(1.55rem,2.85vw,2.55rem); letter-spacing:.035em; }
 
     /* Hospedagem: reserva o espaço sem anunciar opções ainda não verificadas */
     .stay-section { padding:clamp(4rem,7vw,5rem) 1.5rem; background:#A2B6D1; color:#fff; text-align:center; }
@@ -2066,6 +2073,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       .welcome-section::before { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(28,43,61,.08) 20%,rgba(28,43,61,.82) 88%); }
       .welcome-content { width:min(100%,520px); margin:0 auto; text-align:left; }
       .welcome-title { font-size:clamp(1.65rem,7.4vw,2.15rem); }
+      html[lang="en-GB"] .welcome-title { font-size:clamp(1.45rem,5.8vw,1.85rem); }
       .welcome-message { margin:0; }
       .timeline-section { background-attachment:scroll; }
       .gifts-grid { grid-template-columns:1fr; max-width:560px; gap:3rem; }
@@ -2087,6 +2095,7 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       .welcome-section { min-height:510px; padding:3rem 1.25rem 2.5rem; align-items:flex-end; background-position:96% center; }
       .welcome-content { margin:0; }
       .welcome-title { font-size:clamp(1.5rem,6.6vw,1.8rem); }
+      html[lang="en-GB"] .welcome-title { font-size:clamp(1.32rem,5.7vw,1.65rem); letter-spacing:.025em; }
       .gifts-section { padding-left:.75rem; padding-right:.75rem; padding-bottom:1.75rem; }
       .gifts-grid { gap:2.25rem; }
       .gift-person { min-height:0; padding:0; align-items:flex-end; overflow:visible; }
@@ -2748,6 +2757,10 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
       });
 
       let currentLanguage = 'pt';
+      const languageSwitch = document.querySelector('.language-switch');
+      const languageTransitionTargets = document.querySelectorAll('main > section, main > .timeline-section, footer');
+      languageTransitionTargets.forEach(element => element.classList.add('language-transition-target'));
+
       const applyLanguage = language => {
         currentLanguage = language === 'en' ? 'en' : 'pt';
         document.documentElement.lang = currentLanguage === 'en' ? 'en-GB' : 'pt-BR';
@@ -2766,11 +2779,33 @@ table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 
         document.querySelectorAll('[data-language]').forEach(button => {
           button.setAttribute('aria-pressed', String(button.dataset.language === currentLanguage));
         });
+        if (languageSwitch) languageSwitch.dataset.activeLanguage = currentLanguage;
         localStorage.setItem('wedding-language', currentLanguage);
       };
 
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let languageChangeTimer;
+      const changeLanguage = language => {
+        const nextLanguage = language === 'en' ? 'en' : 'pt';
+        if (nextLanguage === currentLanguage) return;
+
+        window.clearTimeout(languageChangeTimer);
+        if (prefersReducedMotion.matches) {
+          applyLanguage(nextLanguage);
+          return;
+        }
+
+        document.documentElement.classList.add('is-language-changing');
+        languageChangeTimer = window.setTimeout(() => {
+          applyLanguage(nextLanguage);
+          window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(() => document.documentElement.classList.remove('is-language-changing'));
+          });
+        }, 150);
+      };
+
       document.querySelectorAll('[data-language]').forEach(button => {
-        button.addEventListener('click', () => applyLanguage(button.dataset.language));
+        button.addEventListener('click', () => changeLanguage(button.dataset.language));
       });
 
       const savedLanguage = localStorage.getItem('wedding-language');
